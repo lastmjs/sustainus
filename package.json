@@ -2,7 +2,7 @@
   "name": "sustainus",
   "version": "0.0.1",
   "description": "Automatically donate to your dependencies to help sustain us",
-  "main": "main.js",
+  "bin": "bin.js",
   "scripts": {
     "start": "node main.js"
   },
