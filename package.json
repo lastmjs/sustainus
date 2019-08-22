@@ -4,7 +4,7 @@
   "description": "Automatically donate to your dependencies to help sustain us",
   "bin": "bin.js",
   "scripts": {
-    "start": "electron app.js"
+    "start": "NODE_ENV=development electron app.js"
   },
   "repository": {
     "type": "git",
