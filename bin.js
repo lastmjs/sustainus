@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
 const spawn = require('child_process').spawn;
-
-spawn('electron', ['app.js']);
+const pathToApp = require.resolve('sustainus/app.js');
+console.log('pathToApp', pathToApp);
+spawn('electron', [pathToApp]);
