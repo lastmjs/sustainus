@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "/*": [
+        "./*"
+      ],
+      "electron": [
+        "./node_modules/electron/index.js"
+      ],
+      "lit-html": [
+        "./node_modules/lit-html/lit-html.js"
+      ],
+      "redux": [
+        "./node_modules/redux/es/redux.js"
+      ],
+      "@jsenv/node-module-import-map": [
+        "./node_modules/@jsenv/node-module-import-map/index.js"
+      ],
+      "http-server": [
+        "./node_modules/http-server/lib/http-server.js"
+      ],
+      "zwitterion": [
+        "./node_modules/zwitterion/index.js"
+      ]
+    }
+  }
+}
