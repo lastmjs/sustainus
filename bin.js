@@ -2,4 +2,7 @@
 
 const spawn = require('child_process').spawn;
 const pathToApp = require.resolve('sustainus/app.js');
-spawn('electron', [pathToApp]);
+spawn('electron', [pathToApp], {
+    stdio: 'ignore',
+    detached: true
+}).unref();
