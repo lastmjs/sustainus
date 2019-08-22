@@ -1,0 +1,22 @@
+{
+  "name": "sustainus",
+  "version": "0.0.1",
+  "description": "Automatically donate to your dependencies to help sustain us",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lastmjs/sustainus.git"
+  },
+  "author": "Jordan Last <jordan.michael.last@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lastmjs/sustainus/issues"
+  },
+  "homepage": "https://github.com/lastmjs/sustainus#readme",
+  "dependencies": {
+    "electron": "6.0.3"
+  }
+}
