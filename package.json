@@ -2,7 +2,7 @@
   "name": "sustainus",
   "version": "0.0.1",
   "description": "Automatically donate to your dependencies to help sustain us",
-  "bin": "bin.js",
+  "bin": "electron app.js",
   "scripts": {
     "start": "node main.js"
   },
