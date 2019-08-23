@@ -6,9 +6,11 @@
     "http-server": "/node_modules/http-server/lib/http-server.js",
     "idb-keyval/": "/node_modules/idb-keyval/",
     "zwitterion/": "/node_modules/zwitterion/",
+    "fkill-cli/": "/node_modules/fkill-cli/",
     "idb-keyval": "/node_modules/idb-keyval/dist/idb-keyval.mjs",
     "zwitterion": "/node_modules/zwitterion/index.js",
     "electron/": "/node_modules/electron/",
+    "fkill-cli": "/node_modules/fkill-cli/index.js",
     "lit-html/": "/node_modules/lit-html/",
     "electron": "/node_modules/electron/index.js",
     "lit-html": "/node_modules/lit-html/lit-html.js",
@@ -39,6 +41,10 @@
     "/node_modules/zwitterion/": {
       "/node_modules/zwitterion/": "/node_modules/zwitterion/",
       "/": "/node_modules/zwitterion/"
+    },
+    "/node_modules/fkill-cli/": {
+      "/node_modules/fkill-cli/": "/node_modules/fkill-cli/",
+      "/": "/node_modules/fkill-cli/"
     },
     "/node_modules/electron/": {
       "/node_modules/electron/": "/node_modules/electron/",

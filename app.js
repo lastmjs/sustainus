@@ -1,3 +1,5 @@
+process.title = 'SUSTAINUS_MAIN_PROCESS';
+
 const { app, BrowserWindow } = require('electron');
 const spawn = require('child_process').spawn;
 const AutoLaunch = require('auto-launch');
@@ -5,7 +7,7 @@ const AutoLaunch = require('auto-launch');
 const autoLaunch = new AutoLaunch({
     name: 'Sustainus',
     path: `${__dirname}/bin.js`,
-    isHidden: true // TODO Figure out a good way to do this, it would be nice for the user to know that this is running even if it is hidden
+    // isHidden: true // TODO Figure out a good way to do this, it would be nice for the user to know that this is running even if it is hidden
 });
 
 autoLaunch.enable();
@@ -42,6 +44,12 @@ autoLaunch.enable();
         // window.loadURL('https://sustainus.io');
         // window.loadFile('./dist/index.html');
     }
+
+    window.on('close', (e) => {
+        e.preventDefault();
+
+        window.hide();
+    });
 
     function startLocalServer(localPort, filename, serveDir) {
         return new Promise((resolve, reject) => {
