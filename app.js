@@ -4,15 +4,14 @@ const AutoLaunch = require('auto-launch');
 
 const autoLaunch = new AutoLaunch({
     name: 'Sustainus',
-    path: `${__dirname}/bin.js` // TODO working on running this at startup
+    path: `${__dirname}/bin.js`,
+    isHidden: true // TODO Figure out a good way to do this, it would be nice for the user to know that this is running even if it is hidden
 });
 
 autoLaunch.enable();
 
 (async () => {
     await new Promise((resolve) => app.on('ready', () => resolve()));
-
-    console.log(`${__dirname}/bin.js`)
 
     // app.setLoginItemSettings({
     //     openAtLogin: true,

@@ -52,6 +52,8 @@ prepareStore().then((Store) => {
     // TODO we should probably abstract away the repeated code in each of the functions
     // TODO we should put this somewhere special
     setInterval(async () => {
+        alert('I am alive');
+
         const state: Readonly<State> = Store.getState();
 
         const oneMinuteInMilliseconds: Milliseconds = 60000;
