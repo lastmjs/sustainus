@@ -45,7 +45,7 @@ const spawn = require('child_process').spawn;
 
     function startLocalServer(localPort, filename, serveDir) {
         return new Promise((resolve, reject) => {
-            const child = spawn('node_modules/.bin/zwitterion', [
+            const child = spawn(process.env.NODE_ENV === 'development' ? 'node_modules/.bin/zwitterion' : 'zwitterion', [
                 '--port', localPort,
                 '--watch-files',
                 '--target', 'ES2015',
