@@ -48,7 +48,7 @@ const spawn = require('child_process').spawn;
         return new Promise((resolve, reject) => {
             console.log('here i am')
             // const child = spawn(process.env.NODE_ENV === 'development' ? 'node_modules/.bin/zwitterion' : 'zwitterion', [
-            const child = spawn('node_modules/.bin/zwitterion', [
+            const child = spawn(`${__dirname}/node_modules/.bin/zwitterion`, [
                 '--port', localPort,
                 '--watch-files',
                 '--target', 'ES2015',
