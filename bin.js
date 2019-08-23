@@ -7,7 +7,7 @@ const pathToSustainus = pathToApp.replace('/app.js', '');
 console.log('pathToApp', pathToApp);
 console.log('pathToSustainus', pathToSustainus);
 
-const childProcess = spawn('electron', [pathToApp], {
+const childProcess = spawn('node_modules/.bin/electron', [pathToApp], {
     cwd: pathToSustainus
 });
 // const childProcess = spawn('electron', [pathToApp], {

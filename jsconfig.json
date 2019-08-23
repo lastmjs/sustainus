@@ -5,23 +5,23 @@
       "/*": [
         "./*"
       ],
-      "auto-launch": [
-        "./node_modules/auto-launch/dist/index.js"
-      ],
       "electron": [
         "./node_modules/electron/index.js"
       ],
-      "lit-html": [
-        "./node_modules/lit-html/lit-html.js"
+      "auto-launch": [
+        "./node_modules/auto-launch/dist/index.js"
       ],
       "idb-keyval": [
         "./node_modules/idb-keyval/dist/idb-keyval.mjs"
       ],
-      "redux": [
-        "./node_modules/redux/es/redux.js"
+      "lit-html": [
+        "./node_modules/lit-html/lit-html.js"
       ],
       "http-server": [
         "./node_modules/http-server/lib/http-server.js"
+      ],
+      "redux": [
+        "./node_modules/redux/es/redux.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"
