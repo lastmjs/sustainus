@@ -1,6 +1,8 @@
 {
   "imports": {
+    "auto-launch/": "/node_modules/auto-launch/",
     "http-server/": "/node_modules/http-server/",
+    "auto-launch": "/node_modules/auto-launch/dist/index.js",
     "http-server": "/node_modules/http-server/lib/http-server.js",
     "idb-keyval/": "/node_modules/idb-keyval/",
     "zwitterion/": "/node_modules/zwitterion/",
@@ -21,6 +23,10 @@
     "/node_modules/loose-envify/": {
       "/node_modules/loose-envify/": "/node_modules/loose-envify/",
       "/": "/node_modules/loose-envify/"
+    },
+    "/node_modules/auto-launch/": {
+      "/node_modules/auto-launch/": "/node_modules/auto-launch/",
+      "/": "/node_modules/auto-launch/"
     },
     "/node_modules/http-server/": {
       "/node_modules/http-server/": "/node_modules/http-server/",

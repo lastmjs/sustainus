@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/lastmjs/sustainus#readme",
   "dependencies": {
+    "auto-launch": "5.0.5",
     "electron": "6.0.3",
     "http-server": "0.11.1",
     "idb-keyval": "3.2.0",

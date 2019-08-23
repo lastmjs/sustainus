@@ -7,9 +7,11 @@ import { prepareStore } from '../services/store.ts';
 import { searchForVerifiedProjects } from '../services/utilities.ts';
 import {
     State,
-    Project
+    Project,
+    Milliseconds
 } from '../index';
 
+// TODO we must type the store
 prepareStore().then((Store) => {
     class SUApp extends HTMLElement {
         constructor() {
@@ -23,18 +25,6 @@ prepareStore().then((Store) => {
                     type: 'RENDER'
                 });
             }, 0);
-    
-            Store.dispatch({
-                type: 'SET_SEARCH_STATE',
-                searchState: 'SEARCHING'
-            });
-    
-            await searchForVerifiedProjects(Store);
-    
-            Store.dispatch({
-                type: 'SET_SEARCH_STATE',
-                searchState: 'NOT_SEARCHING'
-            });
         }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
@@ -58,4 +48,55 @@ prepareStore().then((Store) => {
     }
     
     window.customElements.define('su-app', SUApp);
+
+    // TODO we should probably abstract away the repeated code in each of the functions
+    // TODO we should put this somewhere special
+    setInterval(async () => {
+        const state: Readonly<State> = Store.getState();
+
+        const oneMinuteInMilliseconds: Milliseconds = 60000;
+        const oneHourInMilliseconds: Milliseconds = 60 * oneMinuteInMilliseconds;
+        const oneDayInMilliseconds: Milliseconds = 24 * oneHourInMilliseconds;
+
+        if (state.lastProjectSearchDate === 'NEVER') {
+            Store.dispatch({
+                type: 'SET_SEARCH_STATE',
+                searchState: 'SEARCHING'
+            });
+    
+            await searchForVerifiedProjects(Store);
+    
+            Store.dispatch({
+                type: 'SET_LAST_PROJECT_SEARCH_DATE',
+                lastProjectSearchDate: new Date().getTime()
+            });
+
+            Store.dispatch({
+                type: 'SET_SEARCH_STATE',
+                searchState: 'NOT_SEARCHING'
+            });
+
+            return;
+        }
+
+        if (new Date().getTime() > state.lastProjectSearchDate + oneDayInMilliseconds) {
+            Store.dispatch({
+                type: 'SET_SEARCH_STATE',
+                searchState: 'SEARCHING'
+            });
+    
+            await searchForVerifiedProjects(Store);
+
+            Store.dispatch({
+                type: 'SET_LAST_PROJECT_SEARCH_DATE',
+                lastProjectSearchDate: new Date().getTime()
+            });
+    
+            Store.dispatch({
+                type: 'SET_SEARCH_STATE',
+                searchState: 'NOT_SEARCHING'
+            });
+        }
+
+    }, 30000);
 });

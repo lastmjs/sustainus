@@ -4,6 +4,7 @@ export type State = {
         [name: string]: Readonly<Project>;
     };
     readonly searchState: SearchState;
+    readonly lastProjectSearchDate: Milliseconds | 'NEVER';
 }
 
 export type Project = {
@@ -27,8 +28,16 @@ export type ADD_PROJECT = {
     readonly project: Readonly<Project>;
 }
 
+export type SET_LAST_PROJECT_SEARCH_DATE = {
+    readonly type: 'SET_LAST_PROJECT_SEARCH_DATE';
+    readonly lastProjectSearchDate: Milliseconds;
+}
+
 export type Actions = 
     SET_SEARCH_STATE |
-    ADD_PROJECT;
+    ADD_PROJECT |
+    SET_LAST_PROJECT_SEARCH_DATE;
 
 export type Reducer = (state: Readonly<State>, action: Readonly<Actions>) => Readonly<State>;
+
+export type Milliseconds = number;

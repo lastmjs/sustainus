@@ -1,8 +1,23 @@
 const { app, BrowserWindow } = require('electron');
 const spawn = require('child_process').spawn;
+// const AutoLaunch = require('auto-launch');
+
+// const autoLaunch = new AutoLaunch({
+//     name: 'Sustainus',
+//     // path: __filename // TODO working on running this at startup
+// });
+
+// autoLaunch.enable();
 
 (async () => {
     await new Promise((resolve) => app.on('ready', () => resolve()));
+
+    console.log(`${__dirname}/bin.js`)
+
+    app.setLoginItemSettings({
+        openAtLogin: true,
+        path: `${__dirname}/bin.js`
+    });
 
     let window = new BrowserWindow({
         width: 800,

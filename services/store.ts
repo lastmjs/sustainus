@@ -48,7 +48,8 @@ async function getOriginalState(version: number): Promise<Readonly<State>> {
     return {
         version,
         searchState: 'NOT_SEARCHING',
-        projects: {}    
+        projects: {},
+        lastProjectSearchDate: 'NEVER'
     };
 } 
 
@@ -72,6 +73,13 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
                         ethereumName: action.project.ethereumName
                     }
                 }
+            };
+        }
+
+        if (action.type === 'SET_LAST_PROJECT_SEARCH_DATE') {
+            return {
+                ...state,
+                lastProjectSearchDate: action.lastProjectSearchDate
             };
         }
     
