@@ -23,8 +23,8 @@
       "http-server": [
         "./node_modules/http-server/lib/http-server.js"
       ],
-      "fkill-cli": [
-        "./node_modules/fkill-cli/index.js"
+      "fkill": [
+        "./node_modules/fkill/index.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"

@@ -10,9 +10,9 @@
     console.log('pathToApp', pathToApp);
     console.log('pathToSustainus', pathToSustainus);
     
-    await fkill('SUSTAINUS_MAIN_PROCESS', {
-        silent: true
-    });
+    await fkill('SUSTAINUS');
+    await fkill(':10000');
+    await fkill(':10001');
         
     const childProcess = spawn('node_modules/.bin/electron', [pathToApp], {
         cwd: pathToSustainus

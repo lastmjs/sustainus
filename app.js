@@ -1,4 +1,4 @@
-process.title = 'SUSTAINUS_MAIN_PROCESS';
+process.title = 'SUSTAINUS';
 
 const { app, BrowserWindow } = require('electron');
 const spawn = require('child_process').spawn;
