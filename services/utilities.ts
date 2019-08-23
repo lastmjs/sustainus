@@ -1,12 +1,11 @@
 const { spawn } = require('child_process');
 const fs = require('fs');
 const readline = require('readline');
-import { Store } from './store.js';
 
-export function searchForVerifiedProjects() {
+export function searchForVerifiedProjects(Store) {
     return new Promise((resolve) => {
-        // const finderProcess = spawn('find', ['/', '-name', 'package.json']);
-        const finderProcess = spawn('find', ['.', '-name', 'package.json']);
+        const finderProcess = spawn('find', ['/', '-name', 'package.json']); // global search
+        // const finderProcess = spawn('find', ['.', '-name', 'package.json']); // local search
     
         finderProcess.on('close', () => {
             resolve();
@@ -33,12 +32,18 @@ export function searchForVerifiedProjects() {
             
                 if (json.ethereum) {
     
+                    const ethereumAddress = json.ethereum.match(/.*(( |^).*\.eth)/) === null ? json.ethereum : 'NOT_SET';
+                    const ethereumName = json.ethereum.match(/.*(( |^).*\.eth)/) !== null ? json.ethereum : 'NOT_SET';
+
                     console.log(json);
     
                     Store.dispatch({
-                        type: 'ADD_VERIFIED_PROJECT',
-                        name: json.name,
-                        ethereumAddress: json.ethereum
+                        type: 'ADD_PROJECT',
+                        project: {
+                            name: json.name,
+                            ethereumAddress,
+                            ethereumName
+                        }
                     });
                     console.log(json.ethereum);
                 }

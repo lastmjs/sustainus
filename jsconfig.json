@@ -11,11 +11,11 @@
       "lit-html": [
         "./node_modules/lit-html/lit-html.js"
       ],
+      "idb-keyval": [
+        "./node_modules/idb-keyval/dist/idb-keyval.mjs"
+      ],
       "redux": [
         "./node_modules/redux/es/redux.js"
-      ],
-      "@jsenv/node-module-import-map": [
-        "./node_modules/@jsenv/node-module-import-map/index.js"
       ],
       "http-server": [
         "./node_modules/http-server/lib/http-server.js"

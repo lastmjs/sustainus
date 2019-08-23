@@ -30,18 +30,15 @@ const spawn = require('child_process').spawn;
 
     function startLocalServer(localPort, filename, serveDir) {
         return new Promise((resolve, reject) => {
-            const child = spawn('node_modules/.bin/http-server', [
-                '-p', localPort,
-                // '--watch-files',
-                // '--target', 'ES2015',
-                // '--disable-spa'
+            const child = spawn('node_modules/.bin/zwitterion', [
+                '--port', localPort,
+                '--watch-files',
+                '--target', 'ES2015',
+                '--disable-spa'
             ]);
     
             child.stdout.on('data', (chunk) => {
-                // if (chunk.toString().includes('Zwitterion listening on port')) {
-                //     resolve(child);
-                // }
-                if (chunk.toString().includes('Available on:')) {
+                if (chunk.toString().includes('Zwitterion listening on port')) {
                     resolve(child);
                 }
             });

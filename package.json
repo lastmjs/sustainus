@@ -1,6 +1,6 @@
 {
   "name": "sustainus",
-  "ethereum": "0xc9bc72fe58c5FAcc478514313FbA09d13ee3742b",
+  "ethereum": "sustainus.eth",
   "version": "0.0.7",
   "description": "Automatically donate to your dependencies to help sustain us",
   "bin": "bin.js",
@@ -20,11 +20,10 @@
   "dependencies": {
     "electron": "6.0.3",
     "http-server": "0.11.1",
+    "idb-keyval": "3.2.0",
     "lit-html": "1.1.2",
     "redux": "4.0.4",
-    "zwitterion": "0.29.0"
+    "zwitterion": "0.31.0"
   },
-  "devDependencies": {
-    "@jsenv/node-module-import-map": "^3.4.0"
-  }
+  "devDependencies": {}
 }
