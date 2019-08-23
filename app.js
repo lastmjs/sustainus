@@ -39,12 +39,14 @@ const spawn = require('child_process').spawn;
         window.webContents.openDevTools();
     }
     else {
-        window.loadURL('https://sustainus.io');
+        window.loadURL('http://localhost:10000/sustainus.html');
+        // window.loadURL('https://sustainus.io');
         // window.loadFile('./dist/index.html');
     }
 
     function startLocalServer(localPort, filename, serveDir) {
         return new Promise((resolve, reject) => {
+            console.log('here i am')
             const child = spawn(process.env.NODE_ENV === 'development' ? 'node_modules/.bin/zwitterion' : 'zwitterion', [
                 '--port', localPort,
                 '--watch-files',
