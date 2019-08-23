@@ -47,7 +47,8 @@ const spawn = require('child_process').spawn;
     function startLocalServer(localPort, filename, serveDir) {
         return new Promise((resolve, reject) => {
             console.log('here i am')
-            const child = spawn(process.env.NODE_ENV === 'development' ? 'node_modules/.bin/zwitterion' : 'zwitterion', [
+            // const child = spawn(process.env.NODE_ENV === 'development' ? 'node_modules/.bin/zwitterion' : 'zwitterion', [
+            const child = spawn('node_modules/.bin/zwitterion', [
                 '--port', localPort,
                 '--watch-files',
                 '--target', 'ES2015',
@@ -55,6 +56,7 @@ const spawn = require('child_process').spawn;
             ]);
     
             child.stdout.on('data', (chunk) => {
+                console.log(chunk.toString());
                 if (chunk.toString().includes('Zwitterion listening on port')) {
                     resolve(child);
                 }
