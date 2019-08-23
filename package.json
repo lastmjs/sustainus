@@ -1,7 +1,7 @@
 {
   "name": "sustainus",
   "ethereum": "sustainus.eth",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Automatically donate to your dependencies to help sustain us",
   "bin": "bin.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "auto-launch": "5.0.5",
     "electron": "6.0.3",
-    "fkill-cli": "5.2.0",
+    "fkill": "6.2.0",
     "http-server": "0.11.1",
     "idb-keyval": "3.2.0",
     "lit-html": "1.1.2",
