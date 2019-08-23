@@ -25,6 +25,8 @@ prepareStore().then((Store) => {
                     type: 'RENDER'
                 });
             }, 0);
+
+            // ethersProvider
         }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
@@ -48,8 +50,6 @@ prepareStore().then((Store) => {
     }
     
     window.customElements.define('su-app', SUApp);
-
-    alert('hello')
 
     // TODO we should probably abstract away the repeated code in each of the functions
     // TODO we should put this somewhere special

@@ -49,7 +49,8 @@ async function getOriginalState(version: number): Promise<Readonly<State>> {
         version,
         searchState: 'NOT_SEARCHING',
         projects: {},
-        lastProjectSearchDate: 'NEVER'
+        lastProjectSearchDate: 'NEVER',
+        currentETHPriceInUSDCents: 'NOT_FETCHED'
     };
 } 
 

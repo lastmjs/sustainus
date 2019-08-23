@@ -1,14 +1,148 @@
 <!DOCTYPE html>
 
-<html>
+<html style="width: 100%; height: 100%; margin: 0">
     <head>
         <title>Sustainus</title>
     </head>
 
-    <body>
-        <h1>Sustainus</h1>
+    <body style="width: 100%; height: 100%; margin: 0">
 
-        <p>Checkout the <a href="https://github.com/lastmjs/sustainus" target="_blank">GitHub</a> for more information.</p>
-        <p>Stay tuned for updates. Join the <a href="https://t.me/sustainus" target="_blank">Telegram group</a>.</p>
+        <style>
+            .section-1 {
+                width: 100%;
+                height: 50vh;
+                background-color: black;
+                box-shadow: 0px 0px 4px grey;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .section-1-text {
+                margin: calc(25px + 1vmin);
+                color: white;
+                font-size: calc(100px + 1vmin);
+                /* text-shadow: 0px 0px 5px white; */
+                /* font-family: Lucida Console; */
+            }
+
+            .section-2 {
+                width: 100%;
+                height: 50vh;
+                box-shadow: 0px 0px 4px grey;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(0, 0, 0, .25);
+            }
+
+            .section-2-text {
+                font-size: calc(75px + 1vmin);      
+                color: rgba(0, 0, 0, .75);         
+                font-family: Courier;
+                /* text-shadow: 0px 0px 5px black; */
+            }
+
+            .section-3 {
+                width: 100%;
+                height: 50vh;
+                background-color: #b7496a;
+                box-shadow: 0px 0px 4px grey;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .section-3-text {
+                font-size: calc(75px + 1vmin);      
+                color: white;
+                text-shadow: 0px 0px 5px black;
+            }
+
+            .section-4 {
+                width: 100%;
+                height: 50vh;
+                background-color: #fe7d37;
+                box-shadow: 0px 0px 4px grey;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .section-4-text {
+                font-size: calc(75px + 1vmin);      
+                /* color: rgba(0, 0, 0, .75); */
+                color: #3d3d3d;
+                text-shadow: 0px 0px 5px white;
+            }
+
+            .section-5 {
+                width: 100%;
+                height: 50vh;
+                background-color: black;
+                box-shadow: 0px 0px 4px grey;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .section-5-text {
+                color: white;
+                font-size: calc(100px + 1vmin);
+            }
+        </style>
+
+        <div class="section-1">
+            <div class="section-1-text">npm i -g sustainus</div>
+        </div>
+        
+        <div class="section-2">
+            <div style="flex: 1; display: flex; height: 100%; flex-direction: column; align-items: center">
+                <div style="flex: 1; font-size: calc(30px + 1vmin); font-weight: bold; padding: calc(25px + 1vmin); text-align: center">One recurring donation</div>
+                <div style="line-height: calc(30px + 1vmin); flex: 5; width: 75%; font-size: calc(15px + 1vmin)">Don't waste your life signing up for individual donations, there is not anybody who has got time for that. Setup one universal recurring donation.</div>
+            </div>
+            <div style="flex: 1; display: flex; height: 100%; flex-direction: column; align-items: center">
+                <div style="flex: 1; font-size: calc(30px + 1vmin); font-weight: bold; padding: calc(25px + 1vmin); text-align: center">For all your dependencies</div>
+                <div style="line-height: calc(30px + 1vmin); flex: 5; width: 75%; font-size: calc(15px + 1vmin)">Sustainus splits up your single donation responsibly amongst your npm dependencies. Each dependency with an Ethereum address or name in the package.json gets an equal payout.</div>
+            </div>
+            <div style="flex: 1; display: flex; height: 100%; flex-direction: column; align-items: center">
+                <div style="flex: 1; font-size: calc(30px + 1vmin); font-weight: bold; padding: calc(25px + 1vmin); text-align: center">Automatic and Fair</div>
+                <div style="line-height: calc(30px + 1vmin); flex: 5; width: 75%; font-size: calc(15px + 1vmin)">You've got important software to write. Let Sustainus take care of finding verified dependencies and paying out as fairly as possible.</div>                
+            </div>
+        </div>
+
+        <div class="section-3">
+            <div style="flex: 1; display: flex; height: 100%; flex-direction: column; align-items: center">
+                <div style="color: white; flex: 1; font-size: calc(30px + 1vmin); font-weight: bold; padding: calc(25px + 1vmin); text-align: center">Want to donate?</div>
+                <div style="color: white; line-height: calc(30px + 1vmin); flex: 5; width: 75%; font-size: calc(15px + 1vmin)">
+                    <ol>
+                        <li>Install Sustainus: npm i -g sustainus</li>
+                        <li>Load your Sustainus wallet with ETH</li>
+                        <li>Set a donation amount</li>
+                        <li>Set a donation interval</li>
+                        <li>Forget about it and get back to building</li>
+                    </ol>
+                </div>                
+            </div>        
+
+            <div style="flex: 1; display: flex; height: 100%; flex-direction: column; align-items: center">
+                <div style="color: white; flex: 1; font-size: calc(30px + 1vmin); font-weight: bold; padding: calc(25px + 1vmin); text-align: center">Want donations?</div>
+                <div style="color: white; line-height: calc(30px + 1vmin); flex: 5; width: 75%; font-size: calc(15px + 1vmin)">Add the "ethereum" field to your project's package.json file. Its value should be your Ethereum address or name. If you do not already have an Ethereum address, try <a href="https://www.coinbase.com" target="_blank">Coinbase</a> or <a href="https://metamask.io" target="_blank">MetaMask</a>.</div>                
+            </div>        
+    
+        </div>
+
+        <!-- <div class="section-4">
+            <div class="section-4-text">With one recurring donation</div>
+        </div> -->
+
+        <div class="section-5">
+            <div class="section-5-text">#sustainus</div>
+        </div>
+
+        <!-- <h1>Sustainus</h1> -->
+
+        <!-- <p>Checkout the <a href="https://github.com/lastmjs/sustainus" target="_blank">GitHub</a> for more information.</p> -->
+        <!-- <p>Stay tuned for updates. Join the <a href="https://t.me/sustainus" target="_blank">Telegram group</a>.</p> -->
     </body>
 </html>

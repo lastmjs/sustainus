@@ -5,7 +5,10 @@ export type State = {
     };
     readonly searchState: SearchState;
     readonly lastProjectSearchDate: Milliseconds | 'NEVER';
+    readonly currentETHPriceInUSDCents: USDCents | 'NOT_FETCHED' | 'FETCHING';
 }
+
+export type USDCents = number;
 
 export type Project = {
     name: string;
