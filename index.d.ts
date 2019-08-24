@@ -1,3 +1,6 @@
+import { Store } from 'redux';
+import { WalletCreationState } from './elements/donation-wallet.ts';
+
 export type State = {
     readonly version: number;
     readonly projects: {
@@ -5,9 +8,15 @@ export type State = {
     };
     readonly searchState: SearchState;
     readonly lastProjectSearchDate: Milliseconds | 'NEVER';
-    readonly currentETHPriceInUSDCents: USDCents | 'NOT_FETCHED' | 'FETCHING';
+    readonly walletCreationState: WalletCreationState;
 }
 
+export type CryptonatorETHPriceAPIEndpoint = `https://api.cryptonator.com/api/ticker/eth-usd`;
+export type EtherscanETHPriceAPIEndpoint = `https://api.etherscan.io/api?module=stats&action=ethprice`;
+
+export type ReduxStore = Readonly<Store<Readonly<State>, Readonly<Actions>>>;
+
+export type USD = number;
 export type USDCents = number;
 
 export type Project = {
@@ -36,10 +45,23 @@ export type SET_LAST_PROJECT_SEARCH_DATE = {
     readonly lastProjectSearchDate: Milliseconds;
 }
 
+export type RENDER = {
+    readonly type: 'RENDER';
+}
+
+export type SET_WALLET_CREATION_STATE = {
+    readonly type: 'SET_WALLET_CREATION_STATE';
+    readonly walletCreationState: WalletCreationState;
+}
+
+export type ETHPriceInUSDCentsState = 'NOT_FETCHED' | 'FETCHING' | 'UNKNOWN';
+
 export type Actions = 
+    SET_WALLET_CREATION_STATE |
     SET_SEARCH_STATE |
     ADD_PROJECT |
-    SET_LAST_PROJECT_SEARCH_DATE;
+    SET_LAST_PROJECT_SEARCH_DATE |
+    RENDER;
 
 export type Reducer = (state: Readonly<State>, action: Readonly<Actions>) => Readonly<State>;
 

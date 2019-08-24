@@ -4,15 +4,23 @@ import {
     TemplateResult
 } from 'lit-html';
 import { prepareStore } from '../services/store.ts';
-import { searchForVerifiedProjects } from '../services/utilities.ts';
+import {
+    searchForVerifiedProjects
+} from '../services/utilities.ts';
 import {
     State,
     Project,
-    Milliseconds
+    Milliseconds,
+    ReduxStore
 } from '../index';
+import {
+    DonationWallet,
+    createWallet
+} from './donation-wallet.ts';
+import { get } from 'idb-keyval';
 
 // TODO we must type the store
-prepareStore().then((Store) => {
+prepareStore().then((Store: Readonly<ReduxStore>) => {
     class SUApp extends HTMLElement {
         constructor() {
             super();
@@ -20,24 +28,54 @@ prepareStore().then((Store) => {
         }
     
         async connectedCallback() {
-            setTimeout(() => {
+            setTimeout(async () => {
                 Store.dispatch({
                     type: 'RENDER'
                 });
-            }, 0);
 
-            // ethersProvider
+                if (Store.getState().walletCreationState === 'NOT_CREATED') {
+                    const donationWallet: Readonly<DonationWallet> | null = this.querySelector('donation-wallet');
+
+                    if (donationWallet === null) {
+                        return;
+                    }
+
+                    donationWallet.addEventListener('creating-wallet', () => {
+                        Store.dispatch({
+                            type: 'SET_WALLET_CREATION_STATE',
+                            walletCreationState: 'CREATING'
+                        })
+                    });
+
+                    donationWallet.addEventListener('wallet-created', () => {
+                        Store.dispatch({
+                            type: 'SET_WALLET_CREATION_STATE',
+                            walletCreationState: 'CREATED'
+                        })
+                    });
+
+                    createWallet(donationWallet);
+                }
+            }, 0);
         }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
             console.log('state', state);
             return html`
-                <h1>Sustainus</h1>
-    
+                <h1>Sustainus Alpha</h1>
+
+                <h2>Wallet</h2>
+
+                <donation-wallet
+                    .payoutTargetUSDCents=${10000}
+                ></donation-wallet>
+                
+                <h2>Verified Projects</h2>
+                
                 <div>${state.searchState === 'NOT_SEARCHING' ? 'Search complete' : 'Searching...'}</div>
     
-                <h2>Verified Projects</h2>
-    
+                <br>
+
                 ${Object.values(state.projects).length !== 0 ? Object.values(state.projects).map((project: Readonly<Project>) => {
                     return html`
                         <div>Name: ${project.name}</div>
@@ -54,8 +92,6 @@ prepareStore().then((Store) => {
     // TODO we should probably abstract away the repeated code in each of the functions
     // TODO we should put this somewhere special
     setInterval(async () => {
-        alert('I am alive');
-
         const state: Readonly<State> = Store.getState();
 
         const oneMinuteInMilliseconds: Milliseconds = 60000;

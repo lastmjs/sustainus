@@ -9,10 +9,11 @@ import {
 } from 'redux/es/redux.mjs'; // TODO I would rather avoid this, but import maps are working for now
 import {
     Actions,
-    Reducer
+    Reducer,
+    ReduxStore
 } from '../index';
 
-export async function prepareStore(): Promise<Store> {
+export async function prepareStore(): Promise<Readonly<ReduxStore>> {
     const persistedState: Readonly<State> = await get('state');
     const version: number = 0;
 
@@ -40,7 +41,7 @@ async function getInitialState(
     }
     else {
         // TODO this is where we will run migrations
-        return await getOriginalState(version);
+        return persistedState;
     }
 }
 
@@ -50,7 +51,7 @@ async function getOriginalState(version: number): Promise<Readonly<State>> {
         searchState: 'NOT_SEARCHING',
         projects: {},
         lastProjectSearchDate: 'NEVER',
-        currentETHPriceInUSDCents: 'NOT_FETCHED'
+        walletCreationState: 'NOT_CREATED'
     };
 } 
 
@@ -81,6 +82,13 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
             return {
                 ...state,
                 lastProjectSearchDate: action.lastProjectSearchDate
+            };
+        }
+
+        if (action.type === 'SET_WALLET_CREATION_STATE') {
+            return {
+                ...state,
+                walletCreationState: action.walletCreationState
             };
         }
     
