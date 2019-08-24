@@ -116,10 +116,10 @@ const InitialState: Readonly<State> = {
     ethPriceInUSDCents: 'UNKNOWN',
     payoutIntervalDays: 'NOT_SET',
     payoutTargetUSDCents: 'NOT_SET',
-    lastPayoutDateMilliseconds: 'NEVER', // TODO Do I even need this?
+    lastPayoutDateMilliseconds: 'NEVER',
+    nextPayoutDateMilliseconds: 'NEVER',
     showAcknowledgeMnemonicPhraseModal: false,
-    showReceiveETHModal: false,
-    nextPayoutDateMilliseconds: 'NEVER'
+    showReceiveETHModal: false
 };
 
 function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actions>): Readonly<State> {
@@ -233,8 +233,6 @@ export class DonationWallet extends HTMLElement {
 
     async render(state: Readonly<State>): Promise<Readonly<TemplateResult>> {
 
-        console.log('donationWallet state', state);
-
         const balanceInUSD = getBalanceInUSD(state.ethBalanceInWEI, state.ethPriceInUSDCents);
         const balanceInETH = getBalanceInETH(state.ethBalanceInWEI);
 
@@ -250,14 +248,14 @@ export class DonationWallet extends HTMLElement {
             <style>
             </style>
         
-            <div>Balance</div>
+            <div style="font-weight: bold">Balance</div>
             <br>
             <div>USD: ${balanceInUSD}</div>
             <div>ETH: ${balanceInETH}</div>
             
             <br>
 
-            <div>Payout</div>
+            <div style="font-weight: bold">Payout</div>
             <br>
             <div>USD: ${
                             payoutTargetUSD === 'Loading...' ?
@@ -303,6 +301,8 @@ export class DonationWallet extends HTMLElement {
             <br>
 
             <div><button @click=${showEthereumAddress}>Receive ETH</button></div>
+            <br>
+            <div><button>Pay now</button></div>
 
             <donation-modal
                 ?hidden=${!state.showAcknowledgeMnemonicPhraseModal}
@@ -511,44 +511,7 @@ export async function createWallet(donationWallet: Readonly<DonationWallet>, mne
     await fetchAndSetEthereumAccountBalanceInWEI();
 
     donationWallet.dispatchEvent(new CustomEvent('wallet-created'));
-
-    // const confirmMnemonicPhrase: boolean = confirm(`
-    //     You must copy down this 12 word phrase now or you could lose all of your funds:
-
-    //     ${newWallet.mnemonic}
-
-    //     Proceed once you have safely copied down the phrase.
-    // `);
-
-    // if (confirmMnemonicPhrase === true) {
-    //     donationWallet.dispatchEvent(new CustomEvent('mnemonic-phrase-acknowledged'));
-    // }
-
-    // const nextPayoutDate: Milliseconds = getNextPayoutDate(Store.getState());
-
-    // Store.dispatch({
-    //     type: 'SET_NEXT_PAYOUT_DATE',
-    //     nextPayoutDate
-    // });
 }
-
-// async function acknowledgeMnemonicPhrase() {
-
-//     const mnemonicPhrase = await get('ethereumMnemonicPhrase');
-
-//     const confirmMnemonicPhrase: boolean = confirm(`
-//         You must copy down this 12 word phrase now or you could lose all of your funds:
-
-//         ${mnemonicPhrase}
-
-//         Proceed once you have safely copied down the phrase.
-//     `);
-
-//     if (confirmMnemonicPhrase === true) {
-//         await set('ethereumMnemonicPhraseAcknowledged', true);
-//     }
-
-// }
 
 async function showEthereumAddress(): Promise<void> {
     const mnemonicPhraseAcknowledged: boolean | null | undefined = await get('ethereumMnemonicPhraseAcknowledged');

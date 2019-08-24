@@ -9,6 +9,10 @@ class DonationModal extends HTMLElement {
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
 
+        if (this.shadowRoot === null) {
+            throw new Error('this.shadowRoot is null');
+        }
+
         litRender(html`
             <style>
                 .main-container {
@@ -21,7 +25,8 @@ class DonationModal extends HTMLElement {
                     left: 0;
                     right: 0;
                     top: 25vh;
-                    padding: 25px;
+                    padding: calc(25px + 1vmin);
+                    padding-bottom: calc(50px + 1vmin);
                 }
             </style>
 

@@ -17,9 +17,7 @@ import {
     DonationWallet,
     createWallet
 } from './donation-wallet.ts';
-import { get } from 'idb-keyval';
 
-// TODO we must type the store
 prepareStore().then((Store: Readonly<ReduxStore>) => {
     class SUApp extends HTMLElement {
         constructor() {
@@ -74,33 +72,59 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
         }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
-            console.log('state', state);
             return html`
-                <h1>Sustainus Alpha</h1>
+                <style>
+                    html {
+                        background-color: rgba(0, 0, 0, .1);
+                        height: 100%;
+                        width: 100%;
+                    }
 
-                <h2>Wallet</h2>
+                    body {
+                        height: 100%;
+                        width: 100%;
+                        margin: 0;
+                    }
 
-                <donation-wallet
-                    .payoutTargetUSDCents=${state.payoutTargetUSDCents}
-                    .payoutIntervalDays=${state.payoutIntervalDays}
-                    .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
-                    @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
-                    @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
-                ></donation-wallet>
-                
-                <h2>Verified Projects</h2>
-                
-                <div>${state.searchState === 'NOT_SEARCHING' ? 'Search complete' : 'Searching...'}</div>
-    
-                <br>
+                    .su-app-container {
+                        width: 50%;
+                        margin-left: auto;
+                        margin-right: auto;
+                        background-color: white;
+                        padding: calc(25px + 1vmin);
+                        height: 100%;
+                        box-shadow: 0px 0px 4px black;
+                    }
+                </style>
 
-                ${Object.values(state.projects).length !== 0 ? Object.values(state.projects).map((project: Readonly<Project>) => {
-                    return html`
-                        <div>Name: ${project.name}</div>
-                        ${project.ethereumAddress !== 'NOT_SET' ? html`<div>Ethereum address: ${project.ethereumAddress}</div>` : ''}
-                        ${project.ethereumName !== 'NOT_SET' ? html`<div>Ethereum name: ${project.ethereumName}</div>` : ''}
-                    `;
-                }) : html`<div>No verified projects found</div>`}
+                <div class="su-app-container">
+                    <h1>Sustainus Alpha</h1>
+
+                    <h2>Wallet</h2>
+
+                    <donation-wallet
+                        .payoutTargetUSDCents=${state.payoutTargetUSDCents}
+                        .payoutIntervalDays=${state.payoutIntervalDays}
+                        .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
+                        @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
+                        @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
+                    ></donation-wallet>
+                    
+                    <h2>Verified Projects</h2>
+                    
+                    <div>${state.searchState === 'NOT_SEARCHING' ? 'Search complete' : 'Searching...'}</div>
+        
+                    <br>
+
+                    ${Object.values(state.projects).length !== 0 ? Object.values(state.projects).map((project: Readonly<Project>) => {
+                        return html`
+                            <div>Name: ${project.name}</div>
+                            ${project.ethereumAddress !== 'NOT_SET' ? html`<div>Ethereum address: ${project.ethereumAddress}</div>` : ''}
+                            ${project.ethereumName !== 'NOT_SET' ? html`<div>Ethereum name: ${project.ethereumName}</div>` : ''}
+                        `;
+                    }) : html`<div>No verified projects found</div>`}
+                    
+                </div>
             `;
         }
     }
