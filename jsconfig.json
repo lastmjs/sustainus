@@ -23,11 +23,11 @@
       "redux": [
         "./node_modules/redux/es/redux.js"
       ],
-      "fkill": [
-        "./node_modules/fkill/index.js"
-      ],
       "http-server": [
         "./node_modules/http-server/lib/http-server.js"
+      ],
+      "fkill": [
+        "./node_modules/fkill/index.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"

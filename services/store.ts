@@ -51,7 +51,10 @@ async function getOriginalState(version: number): Promise<Readonly<State>> {
         searchState: 'NOT_SEARCHING',
         projects: {},
         lastProjectSearchDate: 'NEVER',
-        walletCreationState: 'NOT_CREATED'
+        walletCreationState: 'NOT_CREATED',
+        payoutIntervalDays: 7,
+        payoutTargetUSDCents: 1000,
+        lastPayoutDateMilliseconds: 'NEVER'
     };
 } 
 
@@ -89,6 +92,27 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
             return {
                 ...state,
                 walletCreationState: action.walletCreationState
+            };
+        }
+
+        if (action.type === 'SET_LAST_PAYOUT_DATE_MILLISECONDS') {
+            return {
+                ...state,
+                lastPayoutDateMilliseconds: action.lastPayoutDateMilliseconds
+            };
+        }
+
+        if (action.type === 'SET_PAYOUT_INTERVAL_DAYS') {
+            return {
+                ...state,
+                payoutIntervalDays: action.payoutIntervalDays
+            };
+        }
+
+        if (action.type === 'SET_PAYOUT_TARGET_USD_CENTS') {
+            return {
+                ...state,
+                payoutTargetUSDCents: action.payoutTargetUSDCents
             };
         }
     

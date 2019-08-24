@@ -4,6 +4,7 @@
 // TODO make sure we can have multiple instances of these wallets if we need them
 // TODO I think the donation wallet should have everything passed into it...the address, mnemonic phrase, and private key? I don't know if we really want to keep those in memory though...
 // TODO but it would be nice if the consumer or the host had to take care of persistence and everything, might make it more modular and allow users to switch more easily between accounts
+// TODO pass in all of the payout information, and have the wallet raise events when that information changes
 
 import { 
     html,
@@ -20,6 +21,8 @@ import {
     get
 } from 'idb-keyval';
 import './donation-modal.ts';
+
+declare var ethers: any;
 
 type EthereumNetworkName = 'homestead' | 'ropsten';
 
@@ -39,7 +42,10 @@ type State = {
     ethPriceInUSDCents: USDCents | 'UNKNOWN';
     payoutTargetUSDCents: USDCents | 'NOT_SET';
     payoutIntervalDays: Days | 'NOT_SET';
-    lastPayoutDateMilliseconds: Milliseconds | 'NOT_SET';
+    lastPayoutDateMilliseconds: Milliseconds | 'NEVER';
+    nextPayoutDateMilliseconds: Milliseconds | 'NEVER';
+    showAcknowledgeMnemonicPhraseModal: boolean;
+    showReceiveETHModal: boolean;
 }
 
 type RENDER = {
@@ -68,10 +74,28 @@ type SET_PAYOUT_TARGET_USD_CENTS = {
 
 type SET_LAST_PAYOUT_DATE_MILLISECONDS = {
     readonly type: 'SET_LAST_PAYOUT_DATE_MILLISECONDS';
-    readonly lastPayoutDateMilliseconds: Milliseconds;
+    readonly lastPayoutDateMilliseconds: Milliseconds | 'NEVER';
+}
+
+type SET_NEXT_PAYOUT_DATE_MILLISECONDS = {
+    readonly type: 'SET_NEXT_PAYOUT_DATE_MILLISECONDS';
+    readonly nextPayoutDateMilliseconds: Milliseconds;
+}
+
+type SET_SHOW_RECEIVE_ETH_MODAL = {
+    readonly type: 'SET_SHOW_RECEIVE_ETH_MODAL';
+    readonly showReceiveETHModal: boolean;
+}
+
+type SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL = {
+    readonly type: 'SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL';
+    readonly showAcknowledgeMnemonicPhraseModal: boolean;
 }
 
 type Actions = 
+    SET_NEXT_PAYOUT_DATE_MILLISECONDS |
+    SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL |
+    SET_SHOW_RECEIVE_ETH_MODAL |
     SET_LAST_PAYOUT_DATE_MILLISECONDS |
     SET_PAYOUT_TARGET_USD_CENTS |
     SET_PAYOUT_INTERVAL_DAYS |
@@ -92,7 +116,10 @@ const InitialState: Readonly<State> = {
     ethPriceInUSDCents: 'UNKNOWN',
     payoutIntervalDays: 'NOT_SET',
     payoutTargetUSDCents: 'NOT_SET',
-    lastPayoutDateMilliseconds: 'NOT_SET'
+    lastPayoutDateMilliseconds: 'NEVER', // TODO Do I even need this?
+    showAcknowledgeMnemonicPhraseModal: false,
+    showReceiveETHModal: false,
+    nextPayoutDateMilliseconds: 'NEVER'
 };
 
 function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actions>): Readonly<State> {
@@ -146,6 +173,13 @@ function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actio
         };
     }
 
+    if (action.type === 'SET_NEXT_PAYOUT_DATE_MILLISECONDS') {
+        return {
+            ...state,
+            nextPayoutDateMilliseconds: action.nextPayoutDateMilliseconds
+        };
+    }
+
     return state;
 }
 
@@ -169,7 +203,7 @@ export class DonationWallet extends HTMLElement {
         });
     }
 
-    set lastPayoutDateMilliseconds(lastPayoutDateMilliseconds: Milliseconds) {
+    set lastPayoutDateMilliseconds(lastPayoutDateMilliseconds: Milliseconds | 'NEVER') {
         Store.dispatch({
             type: 'SET_LAST_PAYOUT_DATE_MILLISECONDS',
             lastPayoutDateMilliseconds
@@ -210,19 +244,61 @@ export class DonationWallet extends HTMLElement {
         const ethereumAddress = await get('ethereumAddress');
         const ethereumMnemonicPhrase = await get('ethereumMnemonicPhrase');
 
+        const nextPayoutDate = getNextPayoutDate(state.lastPayoutDateMilliseconds, state.payoutIntervalDays);
+
         return html`
             <style>
             </style>
         
-            <div>Balanace</div>
+            <div>Balance</div>
+            <br>
             <div>USD: ${balanceInUSD}</div>
             <div>ETH: ${balanceInETH}</div>
             
             <br>
 
             <div>Payout</div>
-            <div>USD: ${payoutTargetUSD === 'Loading...' ? 'Loading...' : html`<input type="number" .value=${payoutTargetUSD}>`}</div>
+            <br>
+            <div>USD: ${
+                            payoutTargetUSD === 'Loading...' ?
+                                'Loading...' :
+                                html`
+                                    <input 
+                                        type="number"
+                                        .value=${payoutTargetUSD}
+                                        step="1"
+                                        min="0"
+                                        @input=${(e: any) => {
+                                            this.dispatchEvent(new CustomEvent('payout-target-usd-cents-changed', {
+                                                detail: {
+                                                    payoutTargetUSDCents: Math.floor(parseFloat(e.target.value) * 100)
+                                                }
+                                            }));
+                                        }}
+                                    >
+                                `}</div>
             <div>ETH: ${payoutTargetETH}</div>
+            <br>
+            <div>Days: ${
+                state.payoutIntervalDays === 'NOT_SET' ? 
+                    'Loading...' :
+                    html`
+                        <input
+                            type="number"
+                            .value=${state.payoutIntervalDays.toString()}
+                            step="1"
+                            min="0"
+                            @input=${(e: any) => {
+                                this.dispatchEvent(new CustomEvent('payout-interval-days-changed', {
+                                    detail: {
+                                        payoutIntervalDays: parseInt(e.target.value)
+                                    }
+                                }));
+                            }}
+                        >
+                    `
+            }</div>
+            <div>Next payout: ${nextPayoutDate}</div>
 
             <br>
 
@@ -242,15 +318,17 @@ export class DonationWallet extends HTMLElement {
                 <div>${ethereumMnemonicPhrase}</div>
                 <br>
                 <button 
-                @click=${async () => {
-                    Store.dispatch({
-                        type: 'SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL',
-                        showAcknowledgeMnemonicPhraseModal: false
-                    });
-                    await set('ethereumMnemonicPhraseAcknowledged', true);
-                    await showEthereumAddress();
-                }}
-                >Ok</button>
+                    @click=${async () => {
+                        Store.dispatch({
+                            type: 'SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL',
+                            showAcknowledgeMnemonicPhraseModal: false
+                        });
+                        await set('ethereumMnemonicPhraseAcknowledged', true);
+                        await showEthereumAddress();
+                    }}
+                >
+                    Ok
+                </button>
             </donation-modal>
 
             <donation-modal 
@@ -271,6 +349,22 @@ export class DonationWallet extends HTMLElement {
 }
 
 window.customElements.define('donation-wallet', DonationWallet);
+
+function getNextPayoutDate(
+    lastPayoutDateMilliseconds: Milliseconds | 'NEVER',
+    payoutIntervalDays: Days | 'NOT_SET'
+): string {
+
+    if (payoutIntervalDays === 'NOT_SET') {
+        return 'Loading...';
+    }
+
+    if (lastPayoutDateMilliseconds === 'NEVER') {
+        return new Date(new Date().getTime() + payoutIntervalDays * 60000 * 60 * 24).toLocaleDateString();
+    }
+    
+    return new Date(lastPayoutDateMilliseconds + payoutIntervalDays * 60000 * 60 * 24).toLocaleDateString();
+}
 
 function getBalanceInUSD(
     ethBalanceInWEI: WEI | 'UNKNOWN',
@@ -468,8 +562,6 @@ async function showEthereumAddress(): Promise<void> {
             type: 'SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL',
             showAcknowledgeMnemonicPhraseModal: true
         });
-        // await acknowledgeMnemonicPhrase();
-        // return showEthereumAddress();
         return;
     }
 

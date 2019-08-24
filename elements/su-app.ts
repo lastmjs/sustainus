@@ -58,6 +58,20 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                 }
             }, 0);
         }
+
+        payoutTargetUSDCentsChanged(e: any) {
+            Store.dispatch({
+                type: 'SET_PAYOUT_TARGET_USD_CENTS',
+                payoutTargetUSDCents: e.detail.payoutTargetUSDCents
+            });
+        }
+
+        payoutIntervalDaysChanged(e: any) {
+            Store.dispatch({
+                type: 'SET_PAYOUT_INTERVAL_DAYS',
+                payoutIntervalDays: e.detail.payoutIntervalDays
+            });
+        }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
             console.log('state', state);
@@ -67,7 +81,11 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                 <h2>Wallet</h2>
 
                 <donation-wallet
-                    .payoutTargetUSDCents=${10000}
+                    .payoutTargetUSDCents=${state.payoutTargetUSDCents}
+                    .payoutIntervalDays=${state.payoutIntervalDays}
+                    .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
+                    @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
+                    @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
                 ></donation-wallet>
                 
                 <h2>Verified Projects</h2>
