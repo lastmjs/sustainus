@@ -77,9 +77,23 @@ type SET_LAST_PAYOUT_DATE_MILLISECONDS = {
     readonly lastPayoutDateMilliseconds: Milliseconds;
 }
 
+type SET_PROJECT_LAST_TRANSACTION_HASH = {
+    readonly type: 'SET_PROJECT_LAST_TRANSACTION_HASH';
+    readonly projectName: string;    
+    readonly lastTransactionHash: HexString;
+}
+
+type SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS = {
+    readonly type: 'SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS';
+    readonly projectName: string;
+    readonly lastPayoutDateInMilliseconds: Milliseconds;
+}
+
 export type ETHPriceInUSDCentsState = 'NOT_FETCHED' | 'FETCHING' | 'UNKNOWN';
 
 export type Actions = 
+    SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS |
+    SET_PROJECT_LAST_TRANSACTION_HASH |
     SET_PAYOUT_INTERVAL_DAYS |
     SET_PAYOUT_TARGET_USD_CENTS |
     SET_LAST_PAYOUT_DATE_MILLISECONDS |

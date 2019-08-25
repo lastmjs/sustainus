@@ -10,7 +10,8 @@ import {
 import {
     Actions,
     Reducer,
-    ReduxStore
+    ReduxStore,
+    Project
 } from '../index';
 
 export async function prepareStore(): Promise<Readonly<ReduxStore>> {
@@ -68,19 +69,33 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
         }
     
         if (action.type === 'ADD_PROJECT') {
-            return {
-                ...state,
-                projects: {
-                    ...state.projects,
-                    [action.project.name]: {
-                        name: action.project.name,
-                        ethereumAddress: action.project.ethereumAddress,
-                        ethereumName: action.project.ethereumName,
-                        lastPayoutDateInMilliseconds: 'NEVER',
-                        lastTransactionHash: 'NOT_SET'
+
+            const existingProject: Readonly<Project> = state.projects[action.project.name];
+
+            if (existingProject) {
+                const newProject: Readonly<Project> = {
+                    ...existingProject,
+                    ethereumAddress: action.project.ethereumAddress,
+                    ethereumName: action.project.ethereumName
+                };
+
+                return {
+                    ...state,
+                    projects: {
+                        ...state.projects,
+                        [newProject.name]: newProject
                     }
-                }
-            };
+                };
+            }
+            else {
+                return {
+                    ...state,
+                    projects: {
+                        ...state.projects,
+                        [action.project.name]: action.project
+                    }
+                };
+            }
         }
 
         if (action.type === 'SET_LAST_PROJECT_SEARCH_DATE') {
@@ -115,6 +130,38 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
             return {
                 ...state,
                 payoutTargetUSDCents: action.payoutTargetUSDCents
+            };
+        }
+
+        if (action.type === 'SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS') {
+
+            const newProject: Readonly<Project> = {
+                ...state.projects[action.projectName],
+                lastPayoutDateInMilliseconds: action.lastPayoutDateInMilliseconds
+            };
+
+            return {
+                ...state,
+                projects: {
+                    ...state.projects,
+                    [action.projectName]: newProject
+                }
+            };
+        }
+
+        if (action.type === 'SET_PROJECT_LAST_TRANSACTION_HASH') {
+
+            const newProject: Readonly<Project> = {
+                ...state.projects[action.projectName],
+                lastTransactionHash: action.lastTransactionHash
+            };
+
+            return {
+                ...state,
+                projects: {
+                    ...state.projects,
+                    [action.projectName]: newProject
+                }
             };
         }
     

@@ -14,14 +14,14 @@
       "electron": [
         "./node_modules/electron/index.js"
       ],
-      "ethers": [
-        "./node_modules/ethers/index.js"
+      "lit-html": [
+        "./node_modules/lit-html/lit-html.js"
       ],
       "idb-keyval": [
         "./node_modules/idb-keyval/dist/idb-keyval.mjs"
       ],
-      "lit-html": [
-        "./node_modules/lit-html/lit-html.js"
+      "ethers": [
+        "./node_modules/ethers/index.js"
       ],
       "redux": [
         "./node_modules/redux/es/redux.js"

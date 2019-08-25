@@ -90,8 +90,17 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
         }
 
         async transactionCompleted(e: any) {
-            console.log(e);
-            // TODO set the last transaction hash and date and stuff here
+            Store.dispatch({
+                type: 'SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS',
+                projectName: e.detail.id,
+                lastPayoutDateInMilliseconds: new Date().getTime()
+            });
+
+            Store.dispatch({
+                type: 'SET_PROJECT_LAST_TRANSACTION_HASH',
+                projectName: e.detail.id,
+                lastTransactionHash: e.detail.transactionHash
+            });
         }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
@@ -148,7 +157,8 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                             <div>Name: ${project.name}</div>
                             ${project.ethereumAddress !== 'NOT_SET' ? html`<div>Ethereum address: ${project.ethereumAddress}</div>` : ''}
                             ${project.ethereumName !== 'NOT_SET' ? html`<div>Ethereum name: ${project.ethereumName}</div>` : ''}
-                            <div>Last payout: ${project.lastPayoutDateInMilliseconds === 'NEVER' ? 'never' : html`<a href="https://ropsten.etherscan.io/transaction/${project.lastTransactionHash}">${new Date(project.lastPayoutDateInMilliseconds).toLocaleDateString()}</a>`}</div>
+                            <div>Last payout: ${project.lastPayoutDateInMilliseconds === 'NEVER' ? 'never' : html`<a href="https://ropsten.etherscan.io/tx/${project.lastTransactionHash}" target="_blank">${new Date(project.lastPayoutDateInMilliseconds).toLocaleDateString()}</a>`}</div>
+                            <br>
                         `;
                     }) : html`<div>No verified projects found</div>`}
                     
