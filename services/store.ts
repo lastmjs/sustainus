@@ -75,7 +75,9 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
                     [action.project.name]: {
                         name: action.project.name,
                         ethereumAddress: action.project.ethereumAddress,
-                        ethereumName: action.project.ethereumName
+                        ethereumName: action.project.ethereumName,
+                        lastPayoutDateInMilliseconds: 'NEVER',
+                        lastTransactionHash: 'NOT_SET'
                     }
                 }
             };

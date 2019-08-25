@@ -6,8 +6,21 @@ import {
     CryptonatorETHPriceAPIEndpoint,
     EtherscanETHPriceAPIEndpoint,
     USD,
-    ReduxStore
+    ReduxStore,
+    Project,
+    State
 } from '../index';
+import { 
+    EthereumTransactionDatum,
+    ethersProvider,
+    EthereumAddress,
+    WEI,
+    getGasLimit,
+    getSafeLowGasPriceInWEI,
+    convertUSDCentsToWEI,
+    fetchETHPriceInUSDCents
+} from '../elements/donation-wallet.ts';
+import BigNumber from 'bignumber.js';
 
 export function searchForVerifiedProjects(Store: Readonly<ReduxStore>) {
     return new Promise((resolve) => {
@@ -49,7 +62,9 @@ export function searchForVerifiedProjects(Store: Readonly<ReduxStore>) {
                         project: {
                             name: json.name,
                             ethereumAddress,
-                            ethereumName
+                            ethereumName,
+                            lastPayoutDateInMilliseconds: 'NEVER',
+                            lastTransactionHash: 'NOT_SET'
                         }
                     });
                     console.log(json.ethereum);
@@ -72,4 +87,47 @@ export function searchForVerifiedProjects(Store: Readonly<ReduxStore>) {
         // });
     });
 
+}
+
+export async function getPayoutTransactionData(state: Readonly<State>): Promise<ReadonlyArray<EthereumTransactionDatum>> {
+    const projects: ReadonlyArray<Project> = Object.values(state.projects);
+
+    console.log('projects', projects);
+
+    const ethPriceInUSDCents: USDCents | 'UNKNOWN' = await fetchETHPriceInUSDCents();
+
+    if (ethPriceInUSDCents === 'UNKNOWN') {
+        throw new Error('ethPriceInUSDCents is unknown');
+    }
+
+    const payoutTargetWEI: WEI = convertUSDCentsToWEI(state.payoutTargetUSDCents, ethPriceInUSDCents);
+
+    console.log('payoutTargetWEI', payoutTargetWEI);
+
+    const payoutTransactionData: ReadonlyArray<EthereumTransactionDatum> = await Promise.all(projects.map(async (project: Readonly<Project>) => {
+        const ethereumAddress: EthereumAddress = project.ethereumAddress !== 'NOT_SET' ? project.ethereumAddress : await ethersProvider.resolveName(project.ethereumName);
+        
+        const data = '0x0';
+        const grossValue: WEI = new BigNumber(payoutTargetWEI).dividedBy(projects.length).toFixed(0);
+
+        const gasPrice: WEI = await getSafeLowGasPriceInWEI();
+        const gasLimit: number = await getGasLimit(data, ethereumAddress, '0');
+
+        const netValue: WEI = new BigNumber(grossValue).minus(new BigNumber(gasPrice).multipliedBy(gasLimit)).toFixed(0);
+
+        return {
+            id: project.name,
+            to: ethereumAddress,
+            value: netValue,
+            data: '0x0',
+            gasLimit,
+            gasPrice
+        };
+    }));
+
+    console.log('payoutTransactionData', payoutTransactionData);
+
+    return payoutTransactionData.filter((transactionDatum: Readonly<EthereumTransactionDatum>) => {
+        return new BigNumber(transactionDatum.value).isGreaterThan(0);
+    });
 }

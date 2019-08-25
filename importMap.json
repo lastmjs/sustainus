@@ -1,9 +1,9 @@
 {
   "imports": {
+    "bignumber.js/": "/node_modules/bignumber.js/",
     "auto-launch/": "/node_modules/auto-launch/",
-    "http-server/": "/node_modules/http-server/",
+    "bignumber.js": "/node_modules/bignumber.js/bignumber.mjs",
     "auto-launch": "/node_modules/auto-launch/dist/index.js",
-    "http-server": "/node_modules/http-server/lib/http-server.js",
     "idb-keyval/": "/node_modules/idb-keyval/",
     "zwitterion/": "/node_modules/zwitterion/",
     "idb-keyval": "/node_modules/idb-keyval/dist/idb-keyval.mjs",
@@ -24,6 +24,10 @@
       "/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
       "/": "/node_modules/symbol-observable/"
     },
+    "/node_modules/bignumber.js/": {
+      "/node_modules/bignumber.js/": "/node_modules/bignumber.js/",
+      "/": "/node_modules/bignumber.js/"
+    },
     "/node_modules/loose-envify/": {
       "/node_modules/loose-envify/": "/node_modules/loose-envify/",
       "/": "/node_modules/loose-envify/"
@@ -31,10 +35,6 @@
     "/node_modules/auto-launch/": {
       "/node_modules/auto-launch/": "/node_modules/auto-launch/",
       "/": "/node_modules/auto-launch/"
-    },
-    "/node_modules/http-server/": {
-      "/node_modules/http-server/": "/node_modules/http-server/",
-      "/": "/node_modules/http-server/"
     },
     "/node_modules/idb-keyval/": {
       "/node_modules/idb-keyval/": "/node_modules/idb-keyval/",

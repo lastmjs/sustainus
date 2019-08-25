@@ -5,8 +5,7 @@
   "description": "Automatically donate to your dependencies to help sustain us",
   "bin": "bin.js",
   "scripts": {
-    "start": "NODE_ENV=development electron app.js",
-    "zwitterion": "zwitterion --port 10100"
+    "start": "NODE_ENV=development electron app.js"
   },
   "repository": {
     "type": "git",
@@ -20,10 +19,10 @@
   "homepage": "https://github.com/lastmjs/sustainus#readme",
   "dependencies": {
     "auto-launch": "5.0.5",
+    "bignumber.js": "9.0.0",
     "electron": "6.0.3",
     "ethers": "4.0.33",
     "fkill": "6.2.0",
-    "http-server": "0.11.1",
     "idb-keyval": "3.2.0",
     "lit-html": "1.1.2",
     "redux": "4.0.4",

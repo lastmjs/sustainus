@@ -21,12 +21,33 @@ import {
     get
 } from 'idb-keyval';
 import './donation-modal.ts';
+import BigNumber from 'bignumber.js';
 
 declare var ethers: any;
 
 type EthereumNetworkName = 'homestead' | 'ropsten';
+export type HexString = string;
 
 const networkName: EthereumNetworkName = process.env.NODE_ENV === 'development' ? 'ropsten' : 'homestead';
+
+export type EthereumTransactionDatum = {
+    readonly id: string;
+    readonly to: EthereumAddress;
+    readonly value: WEI;
+    readonly gasLimit: number;
+    readonly gasPrice: WEI;
+    readonly data: HexString;
+}
+
+// TODO make sure the types are good here...hex strings might be used a lot
+export type EthereumTransaction = {
+    readonly to: EthereumAddress;
+    readonly value: WEI;
+    readonly gasLimit: number;
+    readonly gasPrice: WEI;
+    readonly nonce: number;
+    readonly data: HexString;
+}
 
 export const ethersProvider = ethers.getDefaultProvider(networkName);
 
@@ -38,14 +59,15 @@ export type EtherscanETHPriceAPIEndpoint = `https://api.etherscan.io/api?module=
 export type EthereumAddress = string;
 
 type State = {
-    ethBalanceInWEI: WEI | 'UNKNOWN';
-    ethPriceInUSDCents: USDCents | 'UNKNOWN';
-    payoutTargetUSDCents: USDCents | 'NOT_SET';
-    payoutIntervalDays: Days | 'NOT_SET';
-    lastPayoutDateMilliseconds: Milliseconds | 'NEVER';
-    nextPayoutDateMilliseconds: Milliseconds | 'NEVER';
-    showAcknowledgeMnemonicPhraseModal: boolean;
-    showReceiveETHModal: boolean;
+    readonly ethBalanceInWEI: WEI | 'UNKNOWN';
+    readonly ethPriceInUSDCents: USDCents | 'UNKNOWN';
+    readonly payoutTargetUSDCents: USDCents | 'NOT_SET';
+    readonly payoutIntervalDays: Days | 'NOT_SET';
+    readonly lastPayoutDateMilliseconds: Milliseconds | 'NEVER';
+    readonly nextPayoutDateMilliseconds: Milliseconds | 'NEVER';
+    readonly showAcknowledgeMnemonicPhraseModal: boolean;
+    readonly showReceiveETHModal: boolean;
+    readonly nonce: number;
 }
 
 type RENDER = {
@@ -92,7 +114,13 @@ type SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL = {
     readonly showAcknowledgeMnemonicPhraseModal: boolean;
 }
 
+type SET_NONCE = {
+    readonly type: 'SET_NONCE';
+    readonly nonce: number;
+}
+
 type Actions = 
+    SET_NONCE |
     SET_NEXT_PAYOUT_DATE_MILLISECONDS |
     SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL |
     SET_SHOW_RECEIVE_ETH_MODAL |
@@ -103,7 +131,9 @@ type Actions =
     SET_ETH_PRICE_IN_USD_CENTS |
     RENDER;
 
-type WEI = number;
+type ETH = string;
+export type WEI = string;
+type GWEI = string;
 
 type USD = number;
 type USDCents = number;
@@ -119,7 +149,8 @@ const InitialState: Readonly<State> = {
     lastPayoutDateMilliseconds: 'NEVER',
     nextPayoutDateMilliseconds: 'NEVER',
     showAcknowledgeMnemonicPhraseModal: false,
-    showReceiveETHModal: false
+    showReceiveETHModal: false,
+    nonce: 0
 };
 
 function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actions>): Readonly<State> {
@@ -177,6 +208,13 @@ function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actio
         return {
             ...state,
             nextPayoutDateMilliseconds: action.nextPayoutDateMilliseconds
+        };
+    }
+
+    if (action.type === 'SET_NONCE') {
+        return {
+            ...state,
+            nonce: action.nonce
         };
     }
 
@@ -302,7 +340,7 @@ export class DonationWallet extends HTMLElement {
 
             <div><button @click=${showEthereumAddress}>Receive ETH</button></div>
             <br>
-            <div><button>Pay now</button></div>
+            <div><button @click=${() => this.dispatchEvent(new CustomEvent('pay-now'))}>Pay now</button></div>
 
             <donation-modal
                 ?hidden=${!state.showAcknowledgeMnemonicPhraseModal}
@@ -369,7 +407,7 @@ function getNextPayoutDate(
 function getBalanceInUSD(
     ethBalanceInWEI: WEI | 'UNKNOWN',
     ethPriceInUSDCents: USDCents | 'UNKNOWN'
-) {
+): string {
     if (
         ethBalanceInWEI === 'UNKNOWN' ||
         ethPriceInUSDCents === 'UNKNOWN'
@@ -384,27 +422,28 @@ function getBalanceInUSD(
 
 function getBalanceInETH(
     ethBalanceInWEI: WEI | 'UNKNOWN'
-) {
+): string {
     if (ethBalanceInWEI === 'UNKNOWN') {
         return 'Loading...';
     }
 
-    return convertWEIToETH(ethBalanceInWEI).toFixed(4);
-    // return new Number(convertWEIToETH(ethBalanceInWEI).toString()).toFixed(4);
+    return new BigNumber(convertWEIToETH(ethBalanceInWEI)).toFixed(4);
 }
 
-function convertWEIToUSD(wei: WEI, ethPriceInUSDCents: USDCents) {
-    // return (BigInt(wei) * BigInt(ethPriceInUSDCents)) / BigInt(1e20);
-    return (wei * ethPriceInUSDCents) / 1e20;
+function convertWEIToUSD(wei: WEI, ethPriceInUSDCents: USDCents): number {
+    return new BigNumber(wei).multipliedBy(ethPriceInUSDCents).dividedBy(1e20).toNumber();
 }
 
-function convertWEIToETH(wei: WEI) {
-    // return BigInt(wei) / BigInt(1e18);
-    return wei / 1e18;
+function convertWEIToETH(wei: WEI): ETH {
+    return new BigNumber(wei).dividedBy(1e18).toString();
 }
 
-function convertUSDCentsToETH(usdCents: USDCents, ethPriceInUSDCents: USDCents) {
-    return usdCents / ethPriceInUSDCents;
+function convertUSDCentsToETH(usdCents: USDCents, ethPriceInUSDCents: USDCents): ETH {
+    return new BigNumber(usdCents).dividedBy(ethPriceInUSDCents).toString();
+}
+
+export function convertUSDCentsToWEI(usdCents: USDCents, ethPriceInUSDCents: USDCents): WEI {
+    return new BigNumber(usdCents).dividedBy(ethPriceInUSDCents).multipliedBy(1e18).toFixed(0);
 }
 
 function getPayoutTargetInUSD(payoutTargetUSDCents: USDCents | 'NOT_SET') {
@@ -427,7 +466,7 @@ function getPayoutTargetInETH(
         return 'Loading...';
     }
 
-    return convertUSDCentsToETH(payoutTargetUSDCents, ethPriceInUSDCents).toFixed(4);
+    return new BigNumber(convertUSDCentsToETH(payoutTargetUSDCents, ethPriceInUSDCents)).toFixed(4);
 }
 
 export const cryptonatorAPIEndpoint: CryptonatorETHPriceAPIEndpoint = `https://api.cryptonator.com/api/ticker/eth-usd`;
@@ -532,4 +571,101 @@ async function showEthereumAddress(): Promise<void> {
         type: 'SET_SHOW_RECEIVE_ETH_MODAL',
         showReceiveETHModal: true
     });
+}
+
+export async function pay(
+    donationWallet: Readonly<DonationWallet>, // TODO it is kind of weird that we are passing this in...perhaps this should be on the instance
+    transactionData: ReadonlyArray<EthereumTransactionDatum>
+) {
+    console.log('pay');
+
+    for (let i=0; i < transactionData.length; i++) {
+        const transactionDatum: Readonly<EthereumTransactionDatum> = transactionData[i];
+
+        console.log('transactionDatum', transactionDatum);
+
+        const transaction = await prepareAndSendTransaction(transactionDatum);
+
+        console.log('transaction.hash', transaction.hash);
+
+        donationWallet.dispatchEvent(new CustomEvent('transaction-completed', {
+            detail: {
+                id: transactionDatum.id,
+                transactionHash: transaction.hash
+            }
+        }))
+    }
+}
+
+async function prepareAndSendTransaction(transactionDatum: Readonly<EthereumTransactionDatum>) {
+    const wallet = new ethers.Wallet(await get('ethereumPrivateKey'), ethersProvider);
+    
+    const nonceFromNetwork: number = await ethersProvider.getTransactionCount(wallet.address);
+    const nonceFromState: number = Store.getState().nonce;
+    
+    if (nonceFromState > nonceFromNetwork) {
+        Store.dispatch({
+            type: 'SET_NONCE',
+            nonce: nonceFromState
+        });
+    }
+    else {
+        Store.dispatch({
+            type: 'SET_NONCE',
+            nonce: nonceFromNetwork
+        });
+    }
+
+    const nonce = Store.getState().nonce;
+
+    const newNonce = nonce + 1;
+
+    Store.dispatch({
+        type: 'SET_NONCE',
+        nonce: newNonce
+    });
+
+    const preparedTransaction: Readonly<EthereumTransaction> = {
+        to: transactionDatum.to,
+        value: ethers.utils.bigNumberify(transactionDatum.value),
+        gasLimit: transactionDatum.gasLimit,
+        gasPrice: ethers.utils.bigNumberify(transactionDatum.gasPrice),
+        nonce,
+        data: transactionDatum.data
+    };
+
+    console.log('preparedTransaction', preparedTransaction);
+    
+    const transaction = await wallet.sendTransaction(preparedTransaction);
+
+    console.log('transaction', transaction);
+
+    return transaction;
+}
+
+export async function getGasLimit(dataHex: HexString, to: EthereumAddress, value: WEI): Promise<number> {
+    return await ethersProvider.estimateGas({
+        to,
+        value,
+        data: dataHex
+    });
+}
+
+// TODO we need a contingency plan for this oracle...
+export async function getSafeLowGasPriceInWEI(): Promise<WEI> {
+    const gasPriceResponse = await window.fetch('https://ethgasstation.info/json/ethgasAPI.json');
+    const gasPriceJSON = await gasPriceResponse.json();
+
+    const safeLowGasPriceInGWEI: GWEI = gasPriceJSON.safeLow;
+    // const safeLowGasPriceInGWEIBigNumber: BigNumber = new BigNumber(safeLowGasPriceInGWEI);
+    // For some reason the API is returning GWEI times 10, so I multiply by 1e8 instead of 1e9
+    // It's true, look here: https://github.com/ethgasstation/ethgasstation-backend/issues/5
+    // const safeLowGasPriceInWEI: WEI = safeLowGasPriceInGWEIBigNumber.multipliedBy(1e8).toFixed(0);
+    // const safeLowGasPriceInWEI: WEI = safeLowGasPriceInGWEIBigNumber.multipliedBy(1e8).toFixed(0);
+    // Math.floor(new Number((BigInt(safeLowGasPriceInGWEI) * BigInt(1e8)).toString()));
+    // const safeLowGasPriceInWEI: WEI = Math.floor(new Number((BigInt(safeLowGasPriceInGWEI) * BigInt(1e8))).toString());
+    // const safeLowGasPriceInWEI: WEI = parseInt((BigInt(safeLowGasPriceInGWEI) * BigInt(1e8)).toString()); // TODO make sure we are using bigint correctly
+    const safeLowGasPriceInWEI: WEI = new BigNumber(safeLowGasPriceInGWEI).multipliedBy(1e8).toString();
+
+    return safeLowGasPriceInWEI;
 }

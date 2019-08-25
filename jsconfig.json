@@ -8,6 +8,9 @@
       "auto-launch": [
         "./node_modules/auto-launch/dist/index.js"
       ],
+      "bignumber.js": [
+        "./node_modules/bignumber.js/bignumber.mjs"
+      ],
       "electron": [
         "./node_modules/electron/index.js"
       ],
@@ -25,9 +28,6 @@
       ],
       "fkill": [
         "./node_modules/fkill/index.js"
-      ],
-      "http-server": [
-        "./node_modules/http-server/lib/http-server.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"

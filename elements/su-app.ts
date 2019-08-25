@@ -5,7 +5,8 @@ import {
 } from 'lit-html';
 import { prepareStore } from '../services/store.ts';
 import {
-    searchForVerifiedProjects
+    searchForVerifiedProjects,
+    getPayoutTransactionData
 } from '../services/utilities.ts';
 import {
     State,
@@ -15,7 +16,9 @@ import {
 } from '../index';
 import {
     DonationWallet,
-    createWallet
+    createWallet,
+    EthereumTransactionDatum,
+    pay
 } from './donation-wallet.ts';
 
 prepareStore().then((Store: Readonly<ReduxStore>) => {
@@ -70,6 +73,26 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                 payoutIntervalDays: e.detail.payoutIntervalDays
             });
         }
+
+        // TODO put in the retry stuff
+        async payNow() {
+            const transactionData: ReadonlyArray<EthereumTransactionDatum> = await getPayoutTransactionData(Store.getState());
+        
+            const donationWallet: Readonly<DonationWallet> | null = this.querySelector('donation-wallet');
+
+            console.log('donationWallet', donationWallet);
+
+            if (donationWallet === null) {
+                return;
+            }
+
+            await pay(donationWallet, transactionData);
+        }
+
+        async transactionCompleted(e: any) {
+            console.log(e);
+            // TODO set the last transaction hash and date and stuff here
+        }
     
         render(state: Readonly<State>): Readonly<TemplateResult> {
             return html`
@@ -92,13 +115,15 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                         margin-right: auto;
                         background-color: white;
                         padding: calc(25px + 1vmin);
-                        height: 100%;
+                        min-height: 100%;
                         box-shadow: 0px 0px 4px black;
                     }
                 </style>
 
                 <div class="su-app-container">
                     <h1>Sustainus Alpha</h1>
+
+                    <div>* Windows is not yet supported</div>
 
                     <h2>Wallet</h2>
 
@@ -108,6 +133,8 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                         .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
                         @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
                         @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
+                        @pay-now=${() => this.payNow()}
+                        @transaction-completed=${(e: any) => this.transactionCompleted(e)}
                     ></donation-wallet>
                     
                     <h2>Verified Projects</h2>
@@ -121,6 +148,7 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                             <div>Name: ${project.name}</div>
                             ${project.ethereumAddress !== 'NOT_SET' ? html`<div>Ethereum address: ${project.ethereumAddress}</div>` : ''}
                             ${project.ethereumName !== 'NOT_SET' ? html`<div>Ethereum name: ${project.ethereumName}</div>` : ''}
+                            <div>Last payout: ${project.lastPayoutDateInMilliseconds === 'NEVER' ? 'never' : html`<a href="https://ropsten.etherscan.io/transaction/${project.lastTransactionHash}">${new Date(project.lastPayoutDateInMilliseconds).toLocaleDateString()}</a>`}</div>
                         `;
                     }) : html`<div>No verified projects found</div>`}
                     

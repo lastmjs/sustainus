@@ -1,5 +1,8 @@
 import { Store } from 'redux';
-import { WalletCreationState } from './elements/donation-wallet.ts';
+import { 
+    WalletCreationState,
+    HexString
+} from './elements/donation-wallet.ts';
 
 export type State = {
     readonly version: number;
@@ -26,6 +29,8 @@ export type Project = {
     name: string;
     ethereumAddress: EthereumAddress | 'NOT_SET';
     ethereumName: EthereumName | 'NOT_SET';
+    lastTransactionHash: HexString | 'NOT_SET';
+    lastPayoutDateInMilliseconds: Milliseconds | 'NEVER';
 }
 
 export type SearchState = 'SEARCHING' | 'NOT_SEARCHING';
