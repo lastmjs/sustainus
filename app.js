@@ -4,6 +4,8 @@ const { app, BrowserWindow } = require('electron');
 const spawn = require('child_process').spawn;
 const AutoLaunch = require('auto-launch');
 
+let shouldClose = false; // TODO evil mutation of course. We need to do something like this to close the window for real when we want to, because by default we keep the app open so that it is long-running
+
 (async () => {
     // app.setLoginItemSettings({
     //     openAtLogin: true,
@@ -27,6 +29,8 @@ const AutoLaunch = require('auto-launch');
             app.on('will-quit', () => {    
                 process.stdout.write('SUSTAINUS_RESTART');
             });
+            
+            shouldClose = true;
 
             app.quit();
 
@@ -34,6 +38,8 @@ const AutoLaunch = require('auto-launch');
         });    
     }
     else {
+        shouldClose = true;
+
         app.quit();
 
         process.stdout.write('SUSTAINUS_DO_NOTHING');
@@ -71,8 +77,10 @@ const AutoLaunch = require('auto-launch');
     }
 
     window.on('close', (e) => {
-        e.preventDefault();
-        window.hide();
+        if (shouldClose === false) {
+            e.preventDefault();
+            window.hide();
+        }
     });
 
     function startLocalServer(localPort, filename, serveDir) {
