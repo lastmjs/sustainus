@@ -21,6 +21,7 @@ import {
     fetchETHPriceInUSDCents
 } from '../elements/donation-wallet.ts';
 import BigNumber from 'bignumber.js';
+const nodeFetch = require('node-fetch');
 
 export function searchForVerifiedProjects(Store: Readonly<ReduxStore>) {
     return new Promise((resolve) => {
@@ -130,4 +131,19 @@ export async function getPayoutTransactionData(state: Readonly<State>): Promise<
     return payoutTransactionData.filter((transactionDatum: Readonly<EthereumTransactionDatum>) => {
         return new BigNumber(transactionDatum.value).isGreaterThan(0);
     });
+}
+
+export async function getInstalledNPMVersion() {
+    const response = await window.fetch('package.json');
+    const responseJSON = await response.json();
+
+    return responseJSON.version;
+}
+
+export async function getPublishedNPMVersion() {
+    // TODO I am only using nodeFetch here to get around CORS restrictions...apparently the registry API has not enabled CORS
+    const response = await nodeFetch('https://registry.npmjs.com/sustainus');
+    const responseJSON = await response.json();
+
+    return responseJSON['dist-tags'].latest;
 }

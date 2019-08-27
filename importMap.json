@@ -1,12 +1,16 @@
 {
   "imports": {
+    "@types/node-fetch/": "/node_modules/@types/node-fetch/",
+    "@types/node-fetch": "/node_modules/@types/node-fetch/.js",
     "bignumber.js/": "/node_modules/bignumber.js/",
     "auto-launch/": "/node_modules/auto-launch/",
     "bignumber.js": "/node_modules/bignumber.js/bignumber.mjs",
     "auto-launch": "/node_modules/auto-launch/dist/index.js",
     "idb-keyval/": "/node_modules/idb-keyval/",
+    "node-fetch/": "/node_modules/node-fetch/",
     "zwitterion/": "/node_modules/zwitterion/",
     "idb-keyval": "/node_modules/idb-keyval/dist/idb-keyval.mjs",
+    "node-fetch": "/node_modules/node-fetch/lib/index.mjs",
     "zwitterion": "/node_modules/zwitterion/index.js",
     "electron/": "/node_modules/electron/",
     "lit-html/": "/node_modules/lit-html/",
@@ -20,6 +24,10 @@
     "redux": "/node_modules/redux/es/redux.js"
   },
   "scopes": {
+    "/node_modules/@types/node-fetch/": {
+      "/node_modules/@types/node-fetch/": "/node_modules/@types/node-fetch/",
+      "/": "/node_modules/@types/node-fetch/"
+    },
     "/node_modules/symbol-observable/": {
       "/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
       "/": "/node_modules/symbol-observable/"
@@ -39,6 +47,10 @@
     "/node_modules/idb-keyval/": {
       "/node_modules/idb-keyval/": "/node_modules/idb-keyval/",
       "/": "/node_modules/idb-keyval/"
+    },
+    "/node_modules/node-fetch/": {
+      "/node_modules/node-fetch/": "/node_modules/node-fetch/",
+      "/": "/node_modules/node-fetch/"
     },
     "/node_modules/zwitterion/": {
       "/node_modules/zwitterion/": "/node_modules/zwitterion/",

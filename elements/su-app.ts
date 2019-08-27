@@ -6,14 +6,16 @@ import {
 import { prepareStore } from '../services/store.ts';
 import {
     searchForVerifiedProjects,
-    getPayoutTransactionData
+    getPayoutTransactionData,
+    getInstalledNPMVersion,
+    getPublishedNPMVersion
 } from '../services/utilities.ts';
 import {
     State,
     Project,
     Milliseconds,
     ReduxStore
-} from '../index';
+} from '../index.d.ts';
 import {
     DonationWallet,
     createWallet,
@@ -141,14 +143,23 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                         font-weight: bold;
                         margin-bottom: calc(25px + 1vmin);
                     }
+
+                    .su-app-subtitle {
+                        font-weight: bold;
+                        display: flex;
+                        justify-content: center;
+                        margin-bottom: calc(25px + 1vmin);
+                        color: red;
+                    }
                 </style>
 
                 <div class="su-app-container">
                     <div class="su-app-title">Sustainus Alpha</div>
 
+                    ${state.installedVersionOutOfDate === true ? html`<div class="su-app-subtitle">Your installed version is out of date: npm i -g sustainus</div>` : ''}
+
                     <div>* Report bugs, issues, and feature requests to the <a href="https://t.me/sustainus" target="_blank">Telegram group</a> or <a href="https://github.com/lastmjs/sustainus" target="_blank">GitHub repo</a></div>
                     <div>* Windows is not yet supported</div>
-                    <div>* Manually install new versions with: npm i -g sustainus</div>
                 </div>
 
                 <div class="su-app-container">                
@@ -238,5 +249,23 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
             });
         }
 
+    }, 30000);
+
+    setInterval(async () => {
+        const installedVersion: string = await getInstalledNPMVersion();
+        const publishedVersion: string = await getPublishedNPMVersion();
+
+        if (installedVersion === publishedVersion) {
+            Store.dispatch({
+                type: 'SET_INSTALLED_VERSION_OUT_OF_DATE',
+                installedVersionOutOfDate: false
+            });
+        }
+        else {
+            Store.dispatch({
+                type: 'SET_INSTALLED_VERSION_OUT_OF_DATE',
+                installedVersionOutOfDate: true
+            });
+        }
     }, 30000);
 });

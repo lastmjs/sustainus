@@ -15,6 +15,7 @@ export type State = {
     readonly payoutTargetUSDCents: USDCents;
     readonly payoutIntervalDays: Days;
     readonly lastPayoutDateMilliseconds: Milliseconds | 'NEVER';
+    readonly installedVersionOutOfDate: boolean;
 }
 
 export type CryptonatorETHPriceAPIEndpoint = `https://api.cryptonator.com/api/ticker/eth-usd`;
@@ -89,9 +90,15 @@ type SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS = {
     readonly lastPayoutDateInMilliseconds: Milliseconds;
 }
 
+type SET_INSTALLED_VERSION_OUT_OF_DATE = {
+    readonly type: 'SET_INSTALLED_VERSION_OUT_OF_DATE';
+    readonly installedVersionOutOfDate: boolean;
+}
+
 export type ETHPriceInUSDCentsState = 'NOT_FETCHED' | 'FETCHING' | 'UNKNOWN';
 
 export type Actions = 
+    SET_INSTALLED_VERSION_OUT_OF_DATE |
     SET_PROJECT_LAST_PAYOUT_DATE_IN_MILLISECONDS |
     SET_PROJECT_LAST_TRANSACTION_HASH |
     SET_PAYOUT_INTERVAL_DAYS |

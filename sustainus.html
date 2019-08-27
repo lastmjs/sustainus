@@ -6,82 +6,94 @@
             Sustainus
         </title>
         <script type="importmap">
-            {
-              "imports": {
-                "bignumber.js/": "/node_modules/bignumber.js/",
-                "auto-launch/": "/node_modules/auto-launch/",
-                "bignumber.js": "/node_modules/bignumber.js/bignumber.mjs",
-                "auto-launch": "/node_modules/auto-launch/dist/index.js",
-                "idb-keyval/": "/node_modules/idb-keyval/",
-                "zwitterion/": "/node_modules/zwitterion/",
-                "idb-keyval": "/node_modules/idb-keyval/dist/idb-keyval.mjs",
-                "zwitterion": "/node_modules/zwitterion/index.js",
-                "electron/": "/node_modules/electron/",
-                "lit-html/": "/node_modules/lit-html/",
-                "electron": "/node_modules/electron/index.js",
-                "lit-html": "/node_modules/lit-html/lit-html.js",
-                "ethers/": "/node_modules/ethers/",
-                "ethers": "/node_modules/ethers/index.js",
-                "fkill/": "/node_modules/fkill/",
-                "redux/": "/node_modules/redux/",
-                "fkill": "/node_modules/fkill/index.js",
-                "redux": "/node_modules/redux/es/redux.js"
+          {
+            "imports": {
+              "@types/node-fetch/": "/node_modules/@types/node-fetch/",
+              "@types/node-fetch": "/node_modules/@types/node-fetch/.js",
+              "bignumber.js/": "/node_modules/bignumber.js/",
+              "auto-launch/": "/node_modules/auto-launch/",
+              "bignumber.js": "/node_modules/bignumber.js/bignumber.mjs",
+              "auto-launch": "/node_modules/auto-launch/dist/index.js",
+              "idb-keyval/": "/node_modules/idb-keyval/",
+              "node-fetch/": "/node_modules/node-fetch/",
+              "zwitterion/": "/node_modules/zwitterion/",
+              "idb-keyval": "/node_modules/idb-keyval/dist/idb-keyval.mjs",
+              "node-fetch": "/node_modules/node-fetch/lib/index.mjs",
+              "zwitterion": "/node_modules/zwitterion/index.js",
+              "electron/": "/node_modules/electron/",
+              "lit-html/": "/node_modules/lit-html/",
+              "electron": "/node_modules/electron/index.js",
+              "lit-html": "/node_modules/lit-html/lit-html.js",
+              "ethers/": "/node_modules/ethers/",
+              "ethers": "/node_modules/ethers/index.js",
+              "fkill/": "/node_modules/fkill/",
+              "redux/": "/node_modules/redux/",
+              "fkill": "/node_modules/fkill/index.js",
+              "redux": "/node_modules/redux/es/redux.js"
+            },
+            "scopes": {
+              "/node_modules/@types/node-fetch/": {
+                "/node_modules/@types/node-fetch/": "/node_modules/@types/node-fetch/",
+                "/": "/node_modules/@types/node-fetch/"
               },
-              "scopes": {
-                "/node_modules/symbol-observable/": {
-                  "/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
-                  "/": "/node_modules/symbol-observable/"
-                },
-                "/node_modules/bignumber.js/": {
-                  "/node_modules/bignumber.js/": "/node_modules/bignumber.js/",
-                  "/": "/node_modules/bignumber.js/"
-                },
-                "/node_modules/loose-envify/": {
-                  "/node_modules/loose-envify/": "/node_modules/loose-envify/",
-                  "/": "/node_modules/loose-envify/"
-                },
-                "/node_modules/auto-launch/": {
-                  "/node_modules/auto-launch/": "/node_modules/auto-launch/",
-                  "/": "/node_modules/auto-launch/"
-                },
-                "/node_modules/idb-keyval/": {
-                  "/node_modules/idb-keyval/": "/node_modules/idb-keyval/",
-                  "/": "/node_modules/idb-keyval/"
-                },
-                "/node_modules/zwitterion/": {
-                  "/node_modules/zwitterion/": "/node_modules/zwitterion/",
-                  "/": "/node_modules/zwitterion/"
-                },
-                "/node_modules/electron/": {
-                  "/node_modules/electron/": "/node_modules/electron/",
-                  "/": "/node_modules/electron/"
-                },
-                "/node_modules/lit-html/": {
-                  "/node_modules/lit-html/": "/node_modules/lit-html/",
-                  "/": "/node_modules/lit-html/"
-                },
-                "/node_modules/ethers/": {
-                  "/node_modules/ethers/": "/node_modules/ethers/",
-                  "/": "/node_modules/ethers/"
-                },
-                "/node_modules/fkill/": {
-                  "/node_modules/fkill/": "/node_modules/fkill/",
-                  "/": "/node_modules/fkill/"
-                },
-                "/node_modules/redux/": {
-                  "/node_modules/redux/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
-                  "/node_modules/redux/node_modules/loose-envify/": "/node_modules/loose-envify/",
-                  "/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
-                  "/node_modules/loose-envify/": "/node_modules/loose-envify/",
-                  "/node_modules/redux/": "/node_modules/redux/",
-                  "symbol-observable/": "/node_modules/symbol-observable/",
-                  "symbol-observable": "/node_modules/symbol-observable/es/index.js",
-                  "loose-envify/": "/node_modules/loose-envify/",
-                  "loose-envify": "/node_modules/loose-envify/index.js",
-                  "/": "/node_modules/redux/"
-                }
+              "/node_modules/symbol-observable/": {
+                "/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
+                "/": "/node_modules/symbol-observable/"
+              },
+              "/node_modules/bignumber.js/": {
+                "/node_modules/bignumber.js/": "/node_modules/bignumber.js/",
+                "/": "/node_modules/bignumber.js/"
+              },
+              "/node_modules/loose-envify/": {
+                "/node_modules/loose-envify/": "/node_modules/loose-envify/",
+                "/": "/node_modules/loose-envify/"
+              },
+              "/node_modules/auto-launch/": {
+                "/node_modules/auto-launch/": "/node_modules/auto-launch/",
+                "/": "/node_modules/auto-launch/"
+              },
+              "/node_modules/idb-keyval/": {
+                "/node_modules/idb-keyval/": "/node_modules/idb-keyval/",
+                "/": "/node_modules/idb-keyval/"
+              },
+              "/node_modules/node-fetch/": {
+                "/node_modules/node-fetch/": "/node_modules/node-fetch/",
+                "/": "/node_modules/node-fetch/"
+              },
+              "/node_modules/zwitterion/": {
+                "/node_modules/zwitterion/": "/node_modules/zwitterion/",
+                "/": "/node_modules/zwitterion/"
+              },
+              "/node_modules/electron/": {
+                "/node_modules/electron/": "/node_modules/electron/",
+                "/": "/node_modules/electron/"
+              },
+              "/node_modules/lit-html/": {
+                "/node_modules/lit-html/": "/node_modules/lit-html/",
+                "/": "/node_modules/lit-html/"
+              },
+              "/node_modules/ethers/": {
+                "/node_modules/ethers/": "/node_modules/ethers/",
+                "/": "/node_modules/ethers/"
+              },
+              "/node_modules/fkill/": {
+                "/node_modules/fkill/": "/node_modules/fkill/",
+                "/": "/node_modules/fkill/"
+              },
+              "/node_modules/redux/": {
+                "/node_modules/redux/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
+                "/node_modules/redux/node_modules/loose-envify/": "/node_modules/loose-envify/",
+                "/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
+                "/node_modules/loose-envify/": "/node_modules/loose-envify/",
+                "/node_modules/redux/": "/node_modules/redux/",
+                "symbol-observable/": "/node_modules/symbol-observable/",
+                "symbol-observable": "/node_modules/symbol-observable/es/index.js",
+                "loose-envify/": "/node_modules/loose-envify/",
+                "loose-envify": "/node_modules/loose-envify/index.js",
+                "/": "/node_modules/redux/"
               }
             }
+          }
         </script>
         <script type="module" src="elements/su-app.ts"></script>
       </head>

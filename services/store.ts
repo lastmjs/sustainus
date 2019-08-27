@@ -12,7 +12,7 @@ import {
     Reducer,
     ReduxStore,
     Project
-} from '../index';
+} from '../index.d.ts';
 
 export async function prepareStore(): Promise<Readonly<ReduxStore>> {
     const persistedState: Readonly<State> = await get('state');
@@ -55,7 +55,8 @@ async function getOriginalState(version: number): Promise<Readonly<State>> {
         walletCreationState: 'NOT_CREATED',
         payoutIntervalDays: 7,
         payoutTargetUSDCents: 1000,
-        lastPayoutDateMilliseconds: 'NEVER'
+        lastPayoutDateMilliseconds: 'NEVER',
+        installedVersionOutOfDate: false
     };
 } 
 
@@ -162,6 +163,13 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
                     ...state.projects,
                     [action.projectName]: newProject
                 }
+            };
+        }
+
+        if (action.type === 'SET_INSTALLED_VERSION_OUT_OF_DATE') {
+            return {
+                ...state,
+                installedVersionOutOfDate: action.installedVersionOutOfDate
             };
         }
     
