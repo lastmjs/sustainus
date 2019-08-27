@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const spawn = require('child_process').spawn;
-const pathToApp = require.resolve('sustainus/app.js');
-const pathToSustainus = pathToApp.replace('/app.js', '');
+const pathToApp = process.env.NODE_ENV === 'development' ? 'app.js' : require.resolve('sustainus/app.js');
+const pathToSustainus = process.env.NODE_ENV === 'development' ? './' : pathToApp.replace('/app.js', '');
 const fkill = require('fkill');
 
 createElectronProcess();

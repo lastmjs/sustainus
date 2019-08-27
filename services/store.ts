@@ -56,7 +56,8 @@ async function getOriginalState(version: number): Promise<Readonly<State>> {
         payoutIntervalDays: 7,
         payoutTargetUSDCents: 1000,
         lastPayoutDateMilliseconds: 'NEVER',
-        installedVersionOutOfDate: false
+        installedVersionOutOfDate: false,
+        installedVersion: 'v0.0.0'
     };
 } 
 
@@ -170,6 +171,13 @@ function getRootReducer(initialState: Readonly<State>): Reducer {
             return {
                 ...state,
                 installedVersionOutOfDate: action.installedVersionOutOfDate
+            };
+        }
+
+        if (action.type === 'SET_INSTALLED_VERSION') {
+            return {
+                ...state,
+                installedVersion: action.installedVersion
             };
         }
     

@@ -3,13 +3,11 @@ const fs = require('fs');
 const readline = require('readline');
 import {
     USDCents,
-    CryptonatorETHPriceAPIEndpoint,
-    EtherscanETHPriceAPIEndpoint,
-    USD,
     ReduxStore,
     Project,
-    State
-} from '../index';
+    State,
+    Milliseconds
+} from '../index.d.ts';
 import { 
     EthereumTransactionDatum,
     ethersProvider,
@@ -22,6 +20,78 @@ import {
 } from '../elements/donation-wallet.ts';
 import BigNumber from 'bignumber.js';
 const nodeFetch = require('node-fetch');
+
+export async function checkForUpToDateNPMVersion(Store: Readonly<ReduxStore>) {
+    const installedVersion: string = await getInstalledNPMVersion();
+
+    Store.dispatch({
+        type: 'SET_INSTALLED_VERSION',
+        installedVersion
+    });
+
+    const publishedVersion: string = await getPublishedNPMVersion();
+
+    if (installedVersion === publishedVersion) {
+        Store.dispatch({
+            type: 'SET_INSTALLED_VERSION_OUT_OF_DATE',
+            installedVersionOutOfDate: false
+        });
+    }
+    else {
+        Store.dispatch({
+            type: 'SET_INSTALLED_VERSION_OUT_OF_DATE',
+            installedVersionOutOfDate: true
+        });
+    }
+}
+
+export async function checkIfSearchNecessary(Store: Readonly<ReduxStore>) {
+    const state: Readonly<State> = Store.getState();
+
+    const oneMinuteInMilliseconds: Milliseconds = 60000;
+    const oneHourInMilliseconds: Milliseconds = 60 * oneMinuteInMilliseconds;
+    const oneDayInMilliseconds: Milliseconds = 24 * oneHourInMilliseconds;
+
+    if (state.lastProjectSearchDate === 'NEVER') {
+        Store.dispatch({
+            type: 'SET_SEARCH_STATE',
+            searchState: 'SEARCHING'
+        });
+
+        await searchForVerifiedProjects(Store);
+
+        Store.dispatch({
+            type: 'SET_LAST_PROJECT_SEARCH_DATE',
+            lastProjectSearchDate: new Date().getTime()
+        });
+
+        Store.dispatch({
+            type: 'SET_SEARCH_STATE',
+            searchState: 'NOT_SEARCHING'
+        });
+
+        return;
+    }
+
+    if (new Date().getTime() > state.lastProjectSearchDate + oneDayInMilliseconds) {
+        Store.dispatch({
+            type: 'SET_SEARCH_STATE',
+            searchState: 'SEARCHING'
+        });
+
+        await searchForVerifiedProjects(Store);
+
+        Store.dispatch({
+            type: 'SET_LAST_PROJECT_SEARCH_DATE',
+            lastProjectSearchDate: new Date().getTime()
+        });
+
+        Store.dispatch({
+            type: 'SET_SEARCH_STATE',
+            searchState: 'NOT_SEARCHING'
+        });
+    }
+}
 
 export function searchForVerifiedProjects(Store: Readonly<ReduxStore>) {
     return new Promise((resolve) => {

@@ -1,11 +1,11 @@
 {
   "name": "sustainus",
   "ethereum": "sustainus.eth",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "Automatically donate to your dependencies to help sustain us",
   "bin": "bin.js",
   "scripts": {
-    "start": "NODE_ENV=development electron app.js"
+    "start": "NODE_ENV=development ./bin.js"
   },
   "repository": {
     "type": "git",

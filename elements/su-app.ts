@@ -5,15 +5,13 @@ import {
 } from 'lit-html';
 import { prepareStore } from '../services/store.ts';
 import {
-    searchForVerifiedProjects,
     getPayoutTransactionData,
-    getInstalledNPMVersion,
-    getPublishedNPMVersion
+    checkIfSearchNecessary,
+    checkForUpToDateNPMVersion
 } from '../services/utilities.ts';
 import {
     State,
     Project,
-    Milliseconds,
     ReduxStore
 } from '../index.d.ts';
 import {
@@ -154,7 +152,7 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                 </style>
 
                 <div class="su-app-container">
-                    <div class="su-app-title">Sustainus Alpha v0.0.32</div>
+                    <div class="su-app-title">Sustainus ${state.installedVersion}</div>
 
                     ${state.installedVersionOutOfDate === true ? html`<div class="su-app-subtitle">Your installed version is out of date: npm i -g sustainus</div>` : ''}
 
@@ -200,72 +198,15 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
     
     window.customElements.define('su-app', SUApp);
 
-    // TODO we should probably abstract away the repeated code in each of the functions
-    // TODO we should put this somewhere special
-    setInterval(async () => {
-        const state: Readonly<State> = Store.getState();
+    checkIfSearchNecessary(Store);
+    checkForUpToDateNPMVersion(Store);
 
-        const oneMinuteInMilliseconds: Milliseconds = 60000;
-        const oneHourInMilliseconds: Milliseconds = 60 * oneMinuteInMilliseconds;
-        const oneDayInMilliseconds: Milliseconds = 24 * oneHourInMilliseconds;
-
-        if (state.lastProjectSearchDate === 'NEVER') {
-            Store.dispatch({
-                type: 'SET_SEARCH_STATE',
-                searchState: 'SEARCHING'
-            });
-    
-            await searchForVerifiedProjects(Store);
-    
-            Store.dispatch({
-                type: 'SET_LAST_PROJECT_SEARCH_DATE',
-                lastProjectSearchDate: new Date().getTime()
-            });
-
-            Store.dispatch({
-                type: 'SET_SEARCH_STATE',
-                searchState: 'NOT_SEARCHING'
-            });
-
-            return;
-        }
-
-        if (new Date().getTime() > state.lastProjectSearchDate + oneDayInMilliseconds) {
-            Store.dispatch({
-                type: 'SET_SEARCH_STATE',
-                searchState: 'SEARCHING'
-            });
-    
-            await searchForVerifiedProjects(Store);
-
-            Store.dispatch({
-                type: 'SET_LAST_PROJECT_SEARCH_DATE',
-                lastProjectSearchDate: new Date().getTime()
-            });
-    
-            Store.dispatch({
-                type: 'SET_SEARCH_STATE',
-                searchState: 'NOT_SEARCHING'
-            });
-        }
-
+    // TODO we should put this somewhere special, I'm thinking the listeners.ts file
+    setInterval(() => {
+        checkIfSearchNecessary(Store);
     }, 30000);
 
-    setInterval(async () => {
-        const installedVersion: string = await getInstalledNPMVersion();
-        const publishedVersion: string = await getPublishedNPMVersion();
-
-        if (installedVersion === publishedVersion) {
-            Store.dispatch({
-                type: 'SET_INSTALLED_VERSION_OUT_OF_DATE',
-                installedVersionOutOfDate: false
-            });
-        }
-        else {
-            Store.dispatch({
-                type: 'SET_INSTALLED_VERSION_OUT_OF_DATE',
-                installedVersionOutOfDate: true
-            });
-        }
+    setInterval(() => {
+        checkForUpToDateNPMVersion(Store);
     }, 30000);
 });

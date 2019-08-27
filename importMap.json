@@ -18,7 +18,9 @@
     "lit-html": "/node_modules/lit-html/lit-html.js",
     "ethers/": "/node_modules/ethers/",
     "ethers": "/node_modules/ethers/index.js",
+    "fkill/": "/node_modules/fkill/",
     "redux/": "/node_modules/redux/",
+    "fkill": "/node_modules/fkill/index.js",
     "redux": "/node_modules/redux/es/redux.js"
   },
   "scopes": {
@@ -65,6 +67,10 @@
     "/node_modules/ethers/": {
       "/node_modules/ethers/": "/node_modules/ethers/",
       "/": "/node_modules/ethers/"
+    },
+    "/node_modules/fkill/": {
+      "/node_modules/fkill/": "/node_modules/fkill/",
+      "/": "/node_modules/fkill/"
     },
     "/node_modules/redux/": {
       "/node_modules/redux/node_modules/symbol-observable/": "/node_modules/symbol-observable/",
