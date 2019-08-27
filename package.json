@@ -1,7 +1,7 @@
 {
   "name": "sustainus",
   "ethereum": "sustainus.eth",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Automatically donate to your dependencies to help sustain us",
   "bin": "bin.js",
   "scripts": {
