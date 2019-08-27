@@ -311,6 +311,7 @@ export class DonationWallet extends HTMLElement {
                     flex-direction: column;
                     align-items: center;
                     flex: 1;
+                    cursor: help;
                 }
 
                 .donation-wallet-value {
@@ -319,7 +320,18 @@ export class DonationWallet extends HTMLElement {
 
                 .donation-wallet-ticker {
                     font-size: calc(25px + 1vmin);
-                    border-top: 1px solid black;
+                }
+
+                .donation-wallet-ticker-eth {
+                    color: rgba(60, 60, 60, 1);
+                }
+
+                .donation-wallet-ticker-usd {
+                    color: rgba(52, 73, 30, 1);
+                }
+
+                .donation-wallet-ticker-words {
+                    color: rgba(140, 140, 140, 1);
                 }
 
                 .donation-wallet-title {
@@ -327,6 +339,27 @@ export class DonationWallet extends HTMLElement {
                     justify-content: center;
                     font-size: calc(25px + 1vmin);
                     font-weight: bold;
+                    margin-bottom: calc(50px + 1vmin);
+                }
+
+                .donation-wallet-input {
+                    width: 100%;
+                    box-sizing: border-box;
+                    text-align: center;
+                    font-size: calc(50px + 1vmin);
+                    border: none;
+                    border-bottom: 1px solid black;
+                }
+
+                .donation-wallet-button {
+                    font-size: calc(15px + 1vmin);
+                    cursor: pointer;
+                    background-color: white;
+                    border: none;
+                    padding: calc(25px + 1vmin);
+                    padding-left: calc(50px + 1vmin);
+                    padding-right: calc(50px + 1vmin);
+                    box-shadow: 0px 0px 4px grey;
                 }
             </style>
         
@@ -336,14 +369,20 @@ export class DonationWallet extends HTMLElement {
                 </div>
 
                 <div class="donation-wallet-square-row">
-                    <div class="donation-wallet-square">
+                    <div 
+                        class="donation-wallet-square"
+                        title="This is your wallet's balance, approximated in USD. If your balance is 0, click Receive ETH below to fill up"
+                    >
                         <div class="donation-wallet-value">${balanceInUSD}</div>
-                        <div class="donation-wallet-ticker">USD</div>
+                        <div class="donation-wallet-ticker donation-wallet-ticker-usd">USD</div>
                     </div>
 
-                    <div class="donation-wallet-square">
+                    <div 
+                        class="donation-wallet-square"
+                        title="This is your wallet's balance in ETH. If your balance is 0, click Receive ETH below to fill up"
+                    >
                         <div class="donation-wallet-value">${balanceInETH}</div>
-                        <div class="donation-wallet-ticker">ETH</div>                
+                        <div class="donation-wallet-ticker donation-wallet-ticker-eth">ETH</div>                
                     </div>
                 </div>
 
@@ -352,13 +391,17 @@ export class DonationWallet extends HTMLElement {
                 </div>
 
                 <div class="donation-wallet-square-row">
-                    <div class="donation-wallet-square">
-                        <div class="donation-wallet-value">
+                    <div 
+                        class="donation-wallet-square"
+                        title="This is the total amount that you would like to be automatically split up and paid out to all verified projects that have been found on your machine. It is an approximated amount in USD"
+                    >
+                        <div class="donation-wallet-value" style="">
                             ${
                                 payoutTargetUSD === 'Loading...' ?
                                     'Loading...' :
                                     html`
                                         <input 
+                                            class="donation-wallet-input"
                                             type="number"
                                             .value=${payoutTargetUSD}
                                             step="1"
@@ -374,23 +417,30 @@ export class DonationWallet extends HTMLElement {
                                     `}
                         </div>
 
-                        <div class="donation-wallet-ticker">USD</div>
+                        <div class="donation-wallet-ticker donation-wallet-ticker-usd">USD</div>
                     </div>
 
-                    <div class="donation-wallet-square">
+                    <div 
+                        class="donation-wallet-square"
+                        title="This is the total amount of ETH that you would like to be automatically split up and paid out to all verified projects that have been found on your machine"
+                    >
                         <div class="donation-wallet-value">${payoutTargetETH}</div>
-                        <div class="donation-wallet-ticker">ETH</div>                
+                        <div class="donation-wallet-ticker donation-wallet-ticker-eth">ETH</div>                
                     </div>
                 </div>
 
                 <div class="donation-wallet-square-row">
-                    <div class="donation-wallet-square">
+                    <div 
+                        class="donation-wallet-square"
+                        title="This is the interval on which your payouts will occur automatically. Currently you will be paying out every ${state.payoutIntervalDays} ${state.payoutIntervalDays === 1 ? 'day' : 'days'}"
+                    >
                         <div class="donation-wallet-value">
                             ${
                                 state.payoutIntervalDays === 'NOT_SET' ? 
                                     'Loading...' :
                                     html`
                                         <input
+                                            class="donation-wallet-input"
                                             type="number"
                                             .value=${state.payoutIntervalDays.toString()}
                                             step="1"
@@ -406,19 +456,29 @@ export class DonationWallet extends HTMLElement {
                                     `
                             }
                         </div>
-                        <div class="donation-wallet-ticker">Days</div>
+                        <div class="donation-wallet-ticker donation-wallet-ticker-words">Days</div>
                     </div>
 
-                    <div class="donation-wallet-square">
+                    <div 
+                        class="donation-wallet-square"
+                        title="This is the date of your next automatic payout"
+                    >
                             <div class="donation-wallet-value">${nextPayoutDate}</div>
-                            <div class="donation-wallet-ticker">Next payout</div>
+                            <div class="donation-wallet-ticker donation-wallet-ticker-words">Next payout</div>
                     </div>
                 </div>
             </div>
 
-            <div><button @click=${showEthereumAddress}>Receive ETH</button></div>
-            <br>
-            <div><button @click=${() => this.dispatchEvent(new CustomEvent('pay-now'))}>Pay now</button></div>
+            <div class="donation-wallet-square-row">     
+                <div class="donation-wallet-square" style="cursor: auto">
+                    <button class="donation-wallet-button" @click=${showEthereumAddress}>Receive ETH</button>
+                </div>
+
+                <div class="donation-wallet-square" style="cursor: auto">
+                    <button title="If you do not want to wait for the automatic payouts, you can pay now by clicking this button" class="donation-wallet-button" @click=${() => this.dispatchEvent(new CustomEvent('pay-now'))}>Pay now</button>
+                </div>               
+    
+            </div>
 
             <donation-modal
                 ?hidden=${!state.showAcknowledgeMnemonicPhraseModal}
@@ -443,7 +503,7 @@ export class DonationWallet extends HTMLElement {
                         await showEthereumAddress();
                     }}
                 >
-                    Ok
+                    I understand
                 </button>
             </donation-modal>
 
@@ -456,9 +516,11 @@ export class DonationWallet extends HTMLElement {
                     })
                 }}
             >
-                <div>Send ETH here:</div>
+                <div>Below is your public Ethereum address. Send ETH here:</div>
                 <br>
                 <div style="word-wrap: break-word">${ethereumAddress}</div>
+                <br>
+                <div>Your balance will update automatically once the ETH has been received</div>
             </donation-modal>
         `;
     }

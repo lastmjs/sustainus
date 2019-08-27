@@ -14,20 +14,20 @@
       "bignumber.js": [
         "./node_modules/bignumber.js/bignumber.mjs"
       ],
-      "ethers": [
-        "./node_modules/ethers/index.js"
-      ],
       "idb-keyval": [
         "./node_modules/idb-keyval/dist/idb-keyval.mjs"
-      ],
-      "fkill": [
-        "./node_modules/fkill/index.js"
       ],
       "lit-html": [
         "./node_modules/lit-html/lit-html.js"
       ],
       "redux": [
         "./node_modules/redux/es/redux.js"
+      ],
+      "ethers": [
+        "./node_modules/ethers/index.js"
+      ],
+      "fkill": [
+        "./node_modules/fkill/index.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"

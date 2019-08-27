@@ -125,34 +125,36 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
 
                     .su-app-container {
                         width: 50%;
+                        margin-top: 5vh;
+                        margin-bottom: 5vh;
                         margin-left: auto;
                         margin-right: auto;
                         background-color: white;
                         padding: calc(25px + 1vmin);
-                        min-height: 100%;
                         box-shadow: 0px 0px 4px black;
+                    }
+
+                    .su-app-title {
+                        display: flex;
+                        justify-content: center;
+                        font-size: calc(25px + 1vmin);
+                        font-weight: bold;
+                        margin-bottom: calc(25px + 1vmin);
                     }
                 </style>
 
                 <div class="su-app-container">
-                    <h1>Sustainus Alpha</h1>
+                    <div class="su-app-title">Sustainus Alpha</div>
 
+                    <div>* Report bugs, issues, and feature requests to the <a href="https://t.me/sustainus" target="_blank">Telegram group</a> or <a href="https://github.com/lastmjs/sustainus" target="_blank">GitHub repo</a></div>
                     <div>* Windows is not yet supported</div>
+                    <div>* Manually install new versions with: npm i -g sustainus</div>
+                </div>
 
-                    <donation-wallet
-                        .payoutTargetUSDCents=${state.payoutTargetUSDCents}
-                        .payoutIntervalDays=${state.payoutIntervalDays}
-                        .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
-                        @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
-                        @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
-                        @pay-now=${() => this.payout()}
-                        @transaction-completed=${(e: any) => this.transactionCompleted(e)}
-                        @payout-interval-elapsed=${() => this.payout()}
-                    ></donation-wallet>
+                <div class="su-app-container">                
+                    <div class="su-app-title" style="cursor: help" title="A verified project has an Ethereum name or address in the ethereum field of its package.json file">Verified Projects</div>
                     
-                    <h2>Verified Projects</h2>
-                    
-                    <div>${state.searchState === 'NOT_SEARCHING' ? 'Search complete' : 'Searching...'}</div>
+                    <div>${state.searchState === 'NOT_SEARCHING' ? `Next search scheduled for ${new Date(new Date(state.lastProjectSearchDate).getTime() + 60000 * 60 * 24)}` : 'Searching...'}</div>
         
                     <br>
 
@@ -166,6 +168,20 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                         `;
                     }) : html`<div>No verified projects found</div>`}
                     
+                </div>
+
+
+                <div class="su-app-container">
+                    <donation-wallet
+                        .payoutTargetUSDCents=${state.payoutTargetUSDCents}
+                        .payoutIntervalDays=${state.payoutIntervalDays}
+                        .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
+                        @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
+                        @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
+                        @pay-now=${() => this.payout()}
+                        @transaction-completed=${(e: any) => this.transactionCompleted(e)}
+                        @payout-interval-elapsed=${() => this.payout()}
+                    ></donation-wallet>
                 </div>
             `;
         }
