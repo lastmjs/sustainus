@@ -45,6 +45,8 @@ export async function checkForUpToDateNPMVersion(Store: Readonly<ReduxStore>) {
     }
 }
 
+let searching = false;
+
 export async function checkIfSearchNecessary(Store: Readonly<ReduxStore>) {
     const state: Readonly<State> = Store.getState();
 
@@ -52,7 +54,12 @@ export async function checkIfSearchNecessary(Store: Readonly<ReduxStore>) {
     const oneHourInMilliseconds: Milliseconds = 60 * oneMinuteInMilliseconds;
     const oneDayInMilliseconds: Milliseconds = 24 * oneHourInMilliseconds;
 
-    if (state.lastProjectSearchDate === 'NEVER') {
+    if (
+        state.lastProjectSearchDate === 'NEVER' &&
+        searching === false
+    ) {
+        searching = true;
+
         Store.dispatch({
             type: 'SET_SEARCH_STATE',
             searchState: 'SEARCHING'
@@ -69,11 +76,19 @@ export async function checkIfSearchNecessary(Store: Readonly<ReduxStore>) {
             type: 'SET_SEARCH_STATE',
             searchState: 'NOT_SEARCHING'
         });
+
+        searching = false;
 
         return;
     }
 
-    if (new Date().getTime() > state.lastProjectSearchDate + oneDayInMilliseconds) {
+    if (
+        state.lastProjectSearchDate !== 'NEVER' &&
+        new Date().getTime() > state.lastProjectSearchDate + oneDayInMilliseconds &&
+        searching === false
+    ) {
+        searching = true;
+
         Store.dispatch({
             type: 'SET_SEARCH_STATE',
             searchState: 'SEARCHING'
@@ -90,6 +105,8 @@ export async function checkIfSearchNecessary(Store: Readonly<ReduxStore>) {
             type: 'SET_SEARCH_STATE',
             searchState: 'NOT_SEARCHING'
         });
+
+        searching = false;
     }
 }
 
