@@ -23,7 +23,7 @@
     // const childProcess = spawn('node_modules/.bin/electron', [pathToApp], {
     //     cwd: pathToSustainus
     // });
-    const childProcess = spawn('electron', [pathToApp], {
+    const childProcess = spawn('node_modules/.bin/electron', [pathToApp], {
         stdio: 'ignore',
         detached: true,
         cwd: pathToSustainus
