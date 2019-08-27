@@ -32,6 +32,13 @@ For simplicity the heuristic for determining payout is to just split up the dona
 
 ### Receiving Donations
 
+You do not need to install or run Sustainus to receive donations as a project maintainer. All that you have to do is add an Ethereum address or name (ENS) to the `ethereum` property of your project's package.json file. For example:
+
+```json
+{
+}
+```
+
 ## Motivation
 
 The open source ecosystem has always faced problems of sustainability. The Ethereum community is largely built on top of open source software and faces the same sustainability issues as the open source community at large.
