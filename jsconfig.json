@@ -14,23 +14,23 @@
       "electron": [
         "./node_modules/electron/index.js"
       ],
-      "lit-html": [
-        "./node_modules/lit-html/lit-html.js"
-      ],
-      "redux": [
-        "./node_modules/redux/es/redux.js"
-      ],
-      "fkill": [
-        "./node_modules/fkill/index.js"
-      ],
       "idb-keyval": [
         "./node_modules/idb-keyval/dist/idb-keyval.mjs"
       ],
       "ethers": [
         "./node_modules/ethers/index.js"
       ],
+      "lit-html": [
+        "./node_modules/lit-html/lit-html.js"
+      ],
       "node-fetch": [
         "./node_modules/node-fetch/lib/index.mjs"
+      ],
+      "redux": [
+        "./node_modules/redux/es/redux.js"
+      ],
+      "fkill": [
+        "./node_modules/fkill/index.js"
       ],
       "@types/node-fetch": [
         "./node_modules/@types/node-fetch/.js"

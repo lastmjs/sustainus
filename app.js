@@ -24,10 +24,6 @@ let shouldClose = false; // TODO evil mutation of course. We need to do somethin
 
     if (lockObtained) {
         app.on('second-instance', () => {
-            app.on('will-quit', () => {    
-                process.stdout.write('SUSTAINUS_RESTART');
-            });
-            
             shouldClose = true;
 
             app.quit();
@@ -39,8 +35,6 @@ let shouldClose = false; // TODO evil mutation of course. We need to do somethin
         shouldClose = true;
 
         app.quit();
-
-        process.stdout.write('SUSTAINUS_DO_NOTHING');
         
         return;
     }
