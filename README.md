@@ -2,13 +2,17 @@
 
 Sustainus is an npm package that allows software developers to setup one recurring donation that is automatically split evenly amongst their software dependencies.
 
-## Installation
+## Use
+
+There are two main ways to use Sustainus: sending donations as a developer and receiving donations as a project maintainer.
+
+### Sending Donations
+
+Install Sustainus from the terminal:
 
 ```bash
 npm install -g sustainus
 ```
-
-## Use
 
 Run Sustainus from the terminal:
 
@@ -22,9 +26,11 @@ Sustainus comes with a client app (most likely will be an Electron app) that all
 
 Once setup and as long as the wallet maintains enough funds for payouts, Sustainus operates in the background indefinitely, continuously supporting the open source ecosystem automatically.
 
-### Determining Payout Percentage
+#### Determining Payout Percentage
 
 For simplicity the heuristic for determining payout is to just split up the donation evenly among dependencies. After initial traction and proving of the idea, more complicated and fair heuristics could be experimented with.
+
+### Receiving Donations
 
 ## Motivation
 
