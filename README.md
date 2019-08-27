@@ -64,6 +64,6 @@ The open source ecosystem has always faced problems of sustainability. The Ether
 
 One of the main advantages to this model is the reduction to zero of marginal cognitive friction for donating to each dependency. The software developer does not need to sign up individually for each dependency, considering pros and cons and amounts and payment systems. One donation is setup automatically, and Sustainus takes care of the rest.
 
-The Ethereum blockchain and the open source ecosystem are already setup to mesh nicely. npm and its package.json system will make integrating Ethereum payments simple and permissionless.
+The Ethereum blockchain and the open source ecosystem are already setup to mesh nicely. npm and its `package.json` system will make integrating Ethereum payments simple and permissionless.
 
 I imagine/hope that Ethereum developers would be the first to enthusiastically adopt. Imagine if each Ethereum developer voluntarily chose to give just $5 per month back to the ecosystem.
