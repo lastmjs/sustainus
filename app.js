@@ -15,6 +15,18 @@ autoLaunch.enable();
 (async () => {
     await new Promise((resolve) => app.on('ready', () => resolve()));
 
+    const lockObtained = app.requestSingleInstanceLock();
+
+    if (lockObtained) {
+        app.on('second-instance', () => {
+            window.maximize();
+            // window.restore();
+        });    
+    }
+    else {
+        app.quit();
+    }
+
     // app.setLoginItemSettings({
     //     openAtLogin: true,
     //     // path: `${__dirname}/bin.js`

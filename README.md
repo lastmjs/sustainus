@@ -10,6 +10,12 @@ npm install -g sustainus
 
 ## Use
 
+Run Sustainus from the terminal:
+
+```bash
+sustainus
+```
+
 On install, Sustainus scans the developer’s machine for node_modules directories, and finds the Ethereum address or name located in the ethereum property of the package.json file of each dependency.
 
 Sustainus comes with a client app (most likely will be an Electron app) that allows the user to setup a local wallet and insert funds. The client will show all verified dependencies (dependencies with a well-formatted Ethereum address or name), and will allow the developer to set an amount and interval for payout.
