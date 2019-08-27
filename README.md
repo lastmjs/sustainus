@@ -2,6 +2,9 @@
 
 Sustainus is an npm package that allows software developers to setup one recurring donation that is automatically split evenly amongst their software dependencies.
 
+* [Sending Donations](#sending-donations)
+* [Receiving Donations](#receiving-donations)
+
 ## Use
 
 There are two main ways to use Sustainus: sending donations as a developer and receiving donations as a project maintainer.
