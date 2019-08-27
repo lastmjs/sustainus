@@ -42,6 +42,7 @@ autoLaunch.enable();
         window.webContents.openDevTools();
     }
     else {
+        window.setMenuBarVisibility(false);
         window.loadURL('http://localhost:10000/sustainus.html');
         // window.loadURL('https://sustainus.io');
         // window.loadFile('./dist/index.html');
