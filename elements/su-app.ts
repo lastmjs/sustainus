@@ -154,7 +154,7 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                 </style>
 
                 <div class="su-app-container">
-                    <div class="su-app-title">Sustainus Alpha</div>
+                    <div class="su-app-title">Sustainus Alpha v0.0.32</div>
 
                     ${state.installedVersionOutOfDate === true ? html`<div class="su-app-subtitle">Your installed version is out of date: npm i -g sustainus</div>` : ''}
 
