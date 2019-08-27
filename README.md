@@ -34,7 +34,7 @@ For simplicity the heuristic for determining payout is to just split up the dona
 
 You do not need to install or run Sustainus to receive donations as a project maintainer. All that you have to do is add an Ethereum address or name (ENS) to the `ethereum` property of your project's `package.json` file. You can look at [Sustainus' `package.json` file as an example](https://github.com/lastmjs/sustainus/blob/master/package.json), or look at the examples below.
 
-Here is an example of a package.json file using an Ethereum name:
+Here is an example of a `package.json` file using an Ethereum name:
 
 ```json
 {
@@ -45,7 +45,7 @@ Here is an example of a package.json file using an Ethereum name:
 }
 ```
 
-Here is an example of a package.json file using an Ethereum address:
+Here is an example of a `package.json` file using an Ethereum address:
 
 ```json
 {
