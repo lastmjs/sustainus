@@ -30,6 +30,8 @@ autoLaunch.enable();
         
     });
 
+    window.maximize();
+
     await startLocalServer(10000);
 
     // TODO we should probably maintain a public page at index.html that directs users to install the app
