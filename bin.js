@@ -5,7 +5,7 @@
     const spawn = require('child_process').spawn;
     const pathToApp = require.resolve('sustainus/app.js');
     const fkill = require('fkill');
-    // const pathToSustainus = pathToApp.replace('/app.js', '');
+    const pathToSustainus = pathToApp.replace('/app.js', '');
 
     // console.log('pathToApp', pathToApp);
     // console.log('pathToSustainus', pathToSustainus);
@@ -25,7 +25,8 @@
     // });
     const childProcess = spawn('electron', [pathToApp], {
         stdio: 'ignore',
-        detached: true
+        detached: true,
+        cwd: pathToSustainus
     }).unref();
     
     // childProcess.stdout.on('data', (data) => {

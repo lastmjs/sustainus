@@ -5,11 +5,11 @@
       "/*": [
         "./*"
       ],
-      "auto-launch": [
-        "./node_modules/auto-launch/dist/index.js"
-      ],
       "bignumber.js": [
         "./node_modules/bignumber.js/bignumber.mjs"
+      ],
+      "auto-launch": [
+        "./node_modules/auto-launch/dist/index.js"
       ],
       "electron": [
         "./node_modules/electron/index.js"
