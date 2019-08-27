@@ -5,11 +5,11 @@
       "/*": [
         "./*"
       ],
-      "bignumber.js": [
-        "./node_modules/bignumber.js/bignumber.mjs"
-      ],
       "auto-launch": [
         "./node_modules/auto-launch/dist/index.js"
+      ],
+      "bignumber.js": [
+        "./node_modules/bignumber.js/bignumber.mjs"
       ],
       "electron": [
         "./node_modules/electron/index.js"
@@ -29,14 +29,11 @@
       "redux": [
         "./node_modules/redux/es/redux.js"
       ],
-      "fkill": [
-        "./node_modules/fkill/index.js"
+      "@types/node-fetch": [
+        "./node_modules/@types/node-fetch/.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"
-      ],
-      "@types/node-fetch": [
-        "./node_modules/@types/node-fetch/.js"
       ]
     }
   }

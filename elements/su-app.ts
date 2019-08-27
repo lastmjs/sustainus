@@ -165,7 +165,7 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
                 <div class="su-app-container">                
                     <div class="su-app-title" style="cursor: help" title="A verified project has an Ethereum name or address in the ethereum field of its package.json file">Verified Projects</div>
                     
-                    <div>${state.searchState === 'NOT_SEARCHING' ? `Next search scheduled for ${new Date(new Date(state.lastProjectSearchDate).getTime() + 60000 * 60 * 24)}` : 'Searching...'}</div>
+                    <div>${state.searchState === 'NOT_SEARCHING' ? `Next search scheduled for ${state.lastProjectSearchDate === 'NEVER' ? 'moments from now' : new Date(new Date(state.lastProjectSearchDate).getTime() + 60000 * 60 * 24)}` : 'Searching...'}</div>
         
                     <br>
 
