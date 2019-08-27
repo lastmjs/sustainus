@@ -3,6 +3,7 @@
 const spawn = require('child_process').spawn;
 const pathToApp = require.resolve('sustainus/app.js');
 const pathToSustainus = pathToApp.replace('/app.js', '');
+const fkill = require('fkill');
 
 createElectronProcess();
 
@@ -15,8 +16,18 @@ function createElectronProcess() {
 
     // TODO we might want to be more sophisticated with reading data from the child...perhaps using readline or some other delimiter
     // TODO we want to make it cross-platform though
-    childProcess.stdout.on('data', (data) => {
+    childProcess.stdout.on('data', async (data) => {
         if (data.includes('SUSTAINUS_RESTART')) {
+
+            // we need to make sure to kill Zwitterion
+            await fkill(':10000', {
+                silent: true
+            });
+
+            await fkill(':10001', {
+                silent: true
+            });
+
             createElectronProcess();
             process.exit(0);
         }
