@@ -68,6 +68,7 @@ type State = {
     readonly showAcknowledgeMnemonicPhraseModal: boolean;
     readonly showReceiveETHModal: boolean;
     readonly nonce: number;
+    readonly processingPayments: boolean;
 }
 
 type RENDER = {
@@ -119,7 +120,13 @@ type SET_NONCE = {
     readonly nonce: number;
 }
 
+type SET_PROCESSING_PAYMENTS = {
+    readonly type: 'SET_PROCESSING_PAYMENTS';
+    readonly processingPayments: boolean;
+}
+
 type Actions = 
+    SET_PROCESSING_PAYMENTS |
     SET_NONCE |
     SET_NEXT_PAYOUT_DATE_MILLISECONDS |
     SET_SHOW_ACKNOWLEDGE_MNEMONIC_PHRASE_MODAL |
@@ -150,7 +157,8 @@ const InitialState: Readonly<State> = {
     nextPayoutDateMilliseconds: 'NEVER',
     showAcknowledgeMnemonicPhraseModal: false,
     showReceiveETHModal: false,
-    nonce: 0
+    nonce: 0,
+    processingPayments: false
 };
 
 function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actions>): Readonly<State> {
@@ -215,6 +223,13 @@ function RootReducer(state: Readonly<State>=InitialState, action: Readonly<Actio
         return {
             ...state,
             nonce: action.nonce
+        };
+    }
+
+    if (action.type === 'SET_PROCESSING_PAYMENTS') {
+        return {
+            ...state,
+            processingPayments: action.processingPayments
         };
     }
 
@@ -298,6 +313,7 @@ export class DonationWallet extends HTMLElement {
                     /* display: flex; */
                     /* flex-direction: column; */
                     /* align-items: center; */
+                    position: relative;
                 }
 
                 .donation-wallet-square-row {
@@ -361,9 +377,19 @@ export class DonationWallet extends HTMLElement {
                     padding-right: calc(50px + 1vmin);
                     box-shadow: 0px 0px 4px grey;
                 }
+
+                .donation-wallet-processing-payments {
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    background-color: white;
+                    text-align: center;
+                }
             </style>
         
             <div class="donation-wallet-main-container">
+                <div class="donation-wallet-processing-payments" ?hidden=${!state.processingPayments}>Processing payments...</div>
+
                 <div class="donation-wallet-title">
                     <div>Balance</div>
                 </div>
@@ -467,18 +493,19 @@ export class DonationWallet extends HTMLElement {
                             <div class="donation-wallet-ticker donation-wallet-ticker-words">Next payout</div>
                     </div>
                 </div>
-            </div>
 
-            <div class="donation-wallet-square-row">     
-                <div class="donation-wallet-square" style="cursor: auto">
-                    <button class="donation-wallet-button" @click=${showEthereumAddress}>Receive ETH</button>
-                </div>
-
-                <div class="donation-wallet-square" style="cursor: auto">
-                    <button title="If you do not want to wait for the automatic payouts, you can pay now by clicking this button" class="donation-wallet-button" @click=${() => this.dispatchEvent(new CustomEvent('pay-now'))}>Pay now</button>
-                </div>               
+                <div class="donation-wallet-square-row">     
+                    <div class="donation-wallet-square" style="cursor: auto">
+                        <button class="donation-wallet-button" @click=${showEthereumAddress}>Receive ETH</button>
+                    </div>
     
+                    <div class="donation-wallet-square" style="cursor: auto">
+                        <button title="If you do not want to wait for the automatic payouts, you can pay now by clicking this button" class="donation-wallet-button" @click=${() => this.dispatchEvent(new CustomEvent('pay-now'))}>Pay now</button>
+                    </div>               
+        
+                </div>
             </div>
+
 
             <donation-modal
                 ?hidden=${!state.showAcknowledgeMnemonicPhraseModal}
@@ -728,6 +755,11 @@ export async function pay(
 ) {
     console.log('pay');
 
+    Store.dispatch({
+        type: 'SET_PROCESSING_PAYMENTS',
+        processingPayments: true
+    });
+
     for (let i=0; i < transactionData.length; i++) {
         const transactionDatum: Readonly<EthereumTransactionDatum> = transactionData[i];
 
@@ -744,6 +776,11 @@ export async function pay(
             }
         }))
     }
+
+    Store.dispatch({
+        type: 'SET_PROCESSING_PAYMENTS',
+        processingPayments: false
+    });
 }
 
 async function prepareAndSendTransaction(transactionDatum: Readonly<EthereumTransactionDatum>) {

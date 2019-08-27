@@ -11,14 +11,14 @@
       "bignumber.js": [
         "./node_modules/bignumber.js/bignumber.mjs"
       ],
-      "electron": [
-        "./node_modules/electron/index.js"
-      ],
       "ethers": [
         "./node_modules/ethers/index.js"
       ],
       "idb-keyval": [
         "./node_modules/idb-keyval/dist/idb-keyval.mjs"
+      ],
+      "electron": [
+        "./node_modules/electron/index.js"
       ],
       "lit-html": [
         "./node_modules/lit-html/lit-html.js"
@@ -32,11 +32,11 @@
       "fkill": [
         "./node_modules/fkill/index.js"
       ],
-      "zwitterion": [
-        "./node_modules/zwitterion/index.js"
-      ],
       "@types/node-fetch": [
         "./node_modules/@types/node-fetch/.js"
+      ],
+      "zwitterion": [
+        "./node_modules/zwitterion/index.js"
       ]
     }
   }
