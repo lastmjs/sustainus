@@ -4,33 +4,44 @@ const { app, BrowserWindow } = require('electron');
 const spawn = require('child_process').spawn;
 const AutoLaunch = require('auto-launch');
 
-const autoLaunch = new AutoLaunch({
-    name: 'Sustainus',
-    path: `${__dirname}/bin.js`,
-    // isHidden: true // TODO Figure out a good way to do this, it would be nice for the user to know that this is running even if it is hidden
-});
-
-autoLaunch.enable();
-
 (async () => {
+    // app.setLoginItemSettings({
+    //     openAtLogin: true,
+    //     // path: `${__dirname}/bin.js`
+    // });
+
+    const autoLaunch = new AutoLaunch({
+        name: 'Sustainus',
+        path: `${__dirname}/bin.js`,
+        // isHidden: true // TODO Figure out a good way to do this, it would be nice for the user to know that this is running even if it is hidden
+    });
+    
+    autoLaunch.enable();    
+
     await new Promise((resolve) => app.on('ready', () => resolve()));
 
     const lockObtained = app.requestSingleInstanceLock();
 
     if (lockObtained) {
         app.on('second-instance', () => {
-            window.maximize();
-            // window.restore();
+            app.on('will-quit', () => {    
+                process.stdout.write('SUSTAINUS_RESTART');
+            });
+
+            app.quit();
+
+            return;
         });    
     }
     else {
         app.quit();
+
+        process.stdout.write('SUSTAINUS_DO_NOTHING');
+        
+        return;
     }
 
-    // app.setLoginItemSettings({
-    //     openAtLogin: true,
-    //     // path: `${__dirname}/bin.js`
-    // });
+    process.stdout.write('SUSTAINUS_DO_NOTHING');
 
     let window = new BrowserWindow({
         width: 800,
@@ -38,8 +49,7 @@ autoLaunch.enable();
         webPreferences: {
             nodeIntegration: true,
             experimentalFeatures: true
-        },
-        
+        }
     });
 
     window.maximize();
@@ -62,7 +72,6 @@ autoLaunch.enable();
 
     window.on('close', (e) => {
         e.preventDefault();
-
         window.hide();
     });
 
