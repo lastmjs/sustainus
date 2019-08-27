@@ -8,26 +8,26 @@
       "auto-launch": [
         "./node_modules/auto-launch/dist/index.js"
       ],
-      "bignumber.js": [
-        "./node_modules/bignumber.js/bignumber.mjs"
-      ],
       "electron": [
         "./node_modules/electron/index.js"
       ],
-      "lit-html": [
-        "./node_modules/lit-html/lit-html.js"
-      ],
-      "idb-keyval": [
-        "./node_modules/idb-keyval/dist/idb-keyval.mjs"
+      "bignumber.js": [
+        "./node_modules/bignumber.js/bignumber.mjs"
       ],
       "ethers": [
         "./node_modules/ethers/index.js"
       ],
-      "redux": [
-        "./node_modules/redux/es/redux.js"
+      "idb-keyval": [
+        "./node_modules/idb-keyval/dist/idb-keyval.mjs"
       ],
       "fkill": [
         "./node_modules/fkill/index.js"
+      ],
+      "lit-html": [
+        "./node_modules/lit-html/lit-html.js"
+      ],
+      "redux": [
+        "./node_modules/redux/es/redux.js"
       ],
       "zwitterion": [
         "./node_modules/zwitterion/index.js"

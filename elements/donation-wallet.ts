@@ -267,6 +267,16 @@ export class DonationWallet extends HTMLElement {
             await fetchAndSetETHPriceInUSDCents();
             await fetchAndSetEthereumAccountBalanceInWEI();
         }, 30000);
+
+        setInterval(async () => {
+            const state: Readonly<State> = Store.getState();
+
+            if (state.payoutIntervalDays !== 'NOT_SET') {
+                if (new Date().getTime() >= getNextPayoutDateInMilliseconds(state.lastPayoutDateMilliseconds, state.payoutIntervalDays)) {
+                    this.dispatchEvent(new CustomEvent('payout-interval-elapsed'));
+                }
+            }
+        }, 30000);
     }
 
     async render(state: Readonly<State>): Promise<Readonly<TemplateResult>> {
@@ -280,63 +290,131 @@ export class DonationWallet extends HTMLElement {
         const ethereumAddress = await get('ethereumAddress');
         const ethereumMnemonicPhrase = await get('ethereumMnemonicPhrase');
 
-        const nextPayoutDate = getNextPayoutDate(state.lastPayoutDateMilliseconds, state.payoutIntervalDays);
+        const nextPayoutDate = getNextPayoutDateFormatted(state.lastPayoutDateMilliseconds, state.payoutIntervalDays);
 
         return html`
             <style>
+                .donation-wallet-main-container {
+                    /* display: flex; */
+                    /* flex-direction: column; */
+                    /* align-items: center; */
+                }
+
+                .donation-wallet-square-row {
+                    display: flex;
+                    margin-bottom: calc(50px + 1vmin);
+                    flex-wrap: wrap;
+                }
+
+                .donation-wallet-square {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    flex: 1;
+                }
+
+                .donation-wallet-value {
+                    font-size: calc(50px + 1vmin);
+                }
+
+                .donation-wallet-ticker {
+                    font-size: calc(25px + 1vmin);
+                    border-top: 1px solid black;
+                }
+
+                .donation-wallet-title {
+                    display: flex;
+                    justify-content: center;
+                    font-size: calc(25px + 1vmin);
+                    font-weight: bold;
+                }
             </style>
         
-            <div style="font-weight: bold">Balance</div>
-            <br>
-            <div>USD: ${balanceInUSD}</div>
-            <div>ETH: ${balanceInETH}</div>
-            
-            <br>
+            <div class="donation-wallet-main-container">
+                <div class="donation-wallet-title">
+                    <div>Balance</div>
+                </div>
 
-            <div style="font-weight: bold">Payout</div>
-            <br>
-            <div>USD: ${
-                            payoutTargetUSD === 'Loading...' ?
-                                'Loading...' :
-                                html`
-                                    <input 
-                                        type="number"
-                                        .value=${payoutTargetUSD}
-                                        step="1"
-                                        min="0"
-                                        @input=${(e: any) => {
-                                            this.dispatchEvent(new CustomEvent('payout-target-usd-cents-changed', {
-                                                detail: {
-                                                    payoutTargetUSDCents: Math.floor(parseFloat(e.target.value) * 100)
-                                                }
-                                            }));
-                                        }}
-                                    >
-                                `}</div>
-            <div>ETH: ${payoutTargetETH}</div>
-            <br>
-            <div>Days: ${
-                state.payoutIntervalDays === 'NOT_SET' ? 
-                    'Loading...' :
-                    html`
-                        <input
-                            type="number"
-                            .value=${state.payoutIntervalDays.toString()}
-                            step="1"
-                            min="0"
-                            @input=${(e: any) => {
-                                this.dispatchEvent(new CustomEvent('payout-interval-days-changed', {
-                                    detail: {
-                                        payoutIntervalDays: parseInt(e.target.value)
-                                    }
-                                }));
-                            }}
-                        >
-                    `
-            }</div>
-            <div>Next payout: ${nextPayoutDate}</div>
+                <div class="donation-wallet-square-row">
+                    <div class="donation-wallet-square">
+                        <div class="donation-wallet-value">${balanceInUSD}</div>
+                        <div class="donation-wallet-ticker">USD</div>
+                    </div>
 
-            <br>
+                    <div class="donation-wallet-square">
+                        <div class="donation-wallet-value">${balanceInETH}</div>
+                        <div class="donation-wallet-ticker">ETH</div>                
+                    </div>
+                </div>
+
+                <div class="donation-wallet-title">
+                    <div>Payout</div>
+                </div>
+
+                <div class="donation-wallet-square-row">
+                    <div class="donation-wallet-square">
+                        <div class="donation-wallet-value">
+                            ${
+                                payoutTargetUSD === 'Loading...' ?
+                                    'Loading...' :
+                                    html`
+                                        <input 
+                                            type="number"
+                                            .value=${payoutTargetUSD}
+                                            step="1"
+                                            min="0"
+                                            @input=${(e: any) => {
+                                                this.dispatchEvent(new CustomEvent('payout-target-usd-cents-changed', {
+                                                    detail: {
+                                                        payoutTargetUSDCents: Math.floor(parseFloat(e.target.value) * 100)
+                                                    }
+                                                }));
+                                            }}
+                                        >
+                                    `}
+                        </div>
+
+                        <div class="donation-wallet-ticker">USD</div>
+                    </div>
+
+                    <div class="donation-wallet-square">
+                        <div class="donation-wallet-value">${payoutTargetETH}</div>
+                        <div class="donation-wallet-ticker">ETH</div>                
+                    </div>
+                </div>
+
+                <div class="donation-wallet-square-row">
+                    <div class="donation-wallet-square">
+                        <div class="donation-wallet-value">
+                            ${
+                                state.payoutIntervalDays === 'NOT_SET' ? 
+                                    'Loading...' :
+                                    html`
+                                        <input
+                                            type="number"
+                                            .value=${state.payoutIntervalDays.toString()}
+                                            step="1"
+                                            min="0"
+                                            @input=${(e: any) => {
+                                                this.dispatchEvent(new CustomEvent('payout-interval-days-changed', {
+                                                    detail: {
+                                                        payoutIntervalDays: parseInt(e.target.value)
+                                                    }
+                                                }));
+                                            }}
+                                        >
+                                    `
+                            }
+                        </div>
+                        <div class="donation-wallet-ticker">Days</div>
+                    </div>
+
+                    <div class="donation-wallet-square">
+                            <div class="donation-wallet-value">${nextPayoutDate}</div>
+                            <div class="donation-wallet-ticker">Next payout</div>
+                    </div>
+                </div>
+            </div>
 
             <div><button @click=${showEthereumAddress}>Receive ETH</button></div>
             <br>
@@ -388,7 +466,7 @@ export class DonationWallet extends HTMLElement {
 
 window.customElements.define('donation-wallet', DonationWallet);
 
-function getNextPayoutDate(
+function getNextPayoutDateFormatted(
     lastPayoutDateMilliseconds: Milliseconds | 'NEVER',
     payoutIntervalDays: Days | 'NOT_SET'
 ): string {
@@ -397,11 +475,20 @@ function getNextPayoutDate(
         return 'Loading...';
     }
 
+    const nextPayoutDateInMilliseconds: Milliseconds = getNextPayoutDateInMilliseconds(lastPayoutDateMilliseconds, payoutIntervalDays);
+
+    return new Date(nextPayoutDateInMilliseconds).toLocaleDateString();
+}
+
+function getNextPayoutDateInMilliseconds(
+    lastPayoutDateMilliseconds: Milliseconds | 'NEVER',
+    payoutIntervalDays: Days
+) {
     if (lastPayoutDateMilliseconds === 'NEVER') {
-        return new Date(new Date().getTime() + payoutIntervalDays * 60000 * 60 * 24).toLocaleDateString();
+        return new Date().getTime() + payoutIntervalDays * 60000 * 60 * 24;
     }
     
-    return new Date(lastPayoutDateMilliseconds + payoutIntervalDays * 60000 * 60 * 24).toLocaleDateString();
+    return lastPayoutDateMilliseconds + payoutIntervalDays * 60000 * 60 * 24;
 }
 
 function getBalanceInUSD(

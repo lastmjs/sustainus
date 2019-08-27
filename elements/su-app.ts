@@ -75,7 +75,7 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
         }
 
         // TODO put in the retry stuff
-        async payNow() {
+        async payout() {
             const transactionData: ReadonlyArray<EthereumTransactionDatum> = await getPayoutTransactionData(Store.getState());
         
             const donationWallet: Readonly<DonationWallet> | null = this.querySelector('donation-wallet');
@@ -87,6 +87,11 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
             }
 
             await pay(donationWallet, transactionData);
+
+            Store.dispatch({
+                type: 'SET_LAST_PAYOUT_DATE_MILLISECONDS',
+                lastPayoutDateMilliseconds: new Date().getTime()
+            });
         }
 
         async transactionCompleted(e: any) {
@@ -134,16 +139,15 @@ prepareStore().then((Store: Readonly<ReduxStore>) => {
 
                     <div>* Windows is not yet supported</div>
 
-                    <h2>Wallet</h2>
-
                     <donation-wallet
                         .payoutTargetUSDCents=${state.payoutTargetUSDCents}
                         .payoutIntervalDays=${state.payoutIntervalDays}
                         .lastPayoutDateMilliseconds=${state.lastPayoutDateMilliseconds}
                         @payout-target-usd-cents-changed=${(e: any) => this.payoutTargetUSDCentsChanged(e)}
                         @payout-interval-days-changed=${(e: any) => this.payoutIntervalDaysChanged(e)}
-                        @pay-now=${() => this.payNow()}
+                        @pay-now=${() => this.payout()}
                         @transaction-completed=${(e: any) => this.transactionCompleted(e)}
+                        @payout-interval-elapsed=${() => this.payout()}
                     ></donation-wallet>
                     
                     <h2>Verified Projects</h2>
